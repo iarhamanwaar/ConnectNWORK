@@ -1,7 +1,16 @@
+import 'package:connectnwork/constants.dart';
+import 'package:connectnwork/screens/home.dart';
+import 'package:connectnwork/screens/job_details.dart';
 import 'package:connectnwork/screens/user_profile.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_sanity/flutter_sanity.dart';
 
-void main() {
+Future<void> main() async {
+  sanityClient = SanityClient(
+    dataset: 'production',
+    projectId: '7d3rcta7',
+  );
+
   runApp(const MyApp());
 }
 
@@ -26,7 +35,12 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const UserProfileScreen(),
+      initialRoute: '/home',
+      routes: {
+        '/home': (context) => const HomeScreen(),
+        '/job_details': (context) => const JobDetailsScreen(),
+        '/user-profile': (context) => const UserProfileScreen(),
+      },
     );
   }
 }
