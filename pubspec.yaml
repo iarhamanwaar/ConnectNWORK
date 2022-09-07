@@ -44,6 +44,7 @@ flutter:
   uses-material-design: true
   assets:
     - drawer_icon.png
+    - back_button.png
     - bell_icon.png
     - profile_avatar.png
     - mcdonalds_logo.png

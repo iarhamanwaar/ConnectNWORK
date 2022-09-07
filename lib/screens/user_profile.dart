@@ -24,6 +24,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         ),
         appBar: const CustomAppBar(
           title: 'My Profile',
+          drawer: true,
         ),
         body: FutureBuilder(
             future: sanityClient.fetch('*[_type == "screens" && slug.current == "my-profile"]'),
