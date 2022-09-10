@@ -30,7 +30,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 Navigator.pop(context);
               },
               icon: Image.asset(
-                'back_button.png',
+                'assets/back_button.png',
                 fit: BoxFit.cover,
               ),
             );
@@ -41,7 +41,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               },
               tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
               icon: Image.asset(
-                'drawer_icon.png',
+                'assets/drawer_icon.png',
                 fit: BoxFit.cover,
               ),
             );
@@ -51,7 +51,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         IconButton(
           icon: Image.asset(
-            'bell_icon.png',
+            'assets/bell_icon.png',
             fit: BoxFit.cover,
           ),
           onPressed: () {},

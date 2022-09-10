@@ -1,11 +1,20 @@
 import 'package:connectnwork/constants.dart';
 import 'package:connectnwork/screens/home.dart';
 import 'package:connectnwork/screens/job_details.dart';
-import 'package:connectnwork/screens/user_profile.dart';
+import 'package:connectnwork/screens/main_page.dart';
+import 'package:connectnwork/screens/my_jobs.dart';
+import 'package:connectnwork/screens/my_profile.dart';
+import 'package:connectnwork/screens/payments_setup.dart';
+import 'package:connectnwork/screens/reset_password.dart';
+import 'package:connectnwork/screens/settings.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sanity/flutter_sanity.dart';
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+
   sanityClient = SanityClient(
     dataset: 'production',
     projectId: '7d3rcta7',
@@ -21,6 +30,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: navigatorKey,
       debugShowCheckedModeBanner: false,
       title: 'ConnectNWork',
       theme: ThemeData(
@@ -35,11 +45,16 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      initialRoute: '/home',
+      initialRoute: '/main',
       routes: {
+        '/main': (context) => const MainPage(),
         '/home': (context) => const HomeScreen(),
+        '/reset_password': (context) => const ResetPasswordPage(),
+        '/my_jobs': (context) => const MyJobs(),
         '/job_details': (context) => const JobDetailsScreen(),
-        '/user-profile': (context) => const UserProfileScreen(),
+        '/my_profile': (context) => const MyProfileScreen(),
+        '/settings': (context) => const SettingsPage(),
+        '/payments_setup': (context) => const PaymentsSetupScreen(),
       },
     );
   }

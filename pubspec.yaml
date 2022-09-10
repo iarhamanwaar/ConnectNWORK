@@ -33,6 +33,9 @@ dependencies:
   cupertino_icons: ^1.0.2
   google_fonts: ^3.0.1
   flutter_sanity: ^1.0.1
+  flutter_svg: ^1.1.5
+  firebase_core: ^1.22.0
+  firebase_auth: ^3.8.0
 
 dev_dependencies:
   flutter_test:
@@ -43,9 +46,4 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - drawer_icon.png
-    - back_button.png
-    - bell_icon.png
-    - profile_avatar.png
-    - mcdonalds_logo.png
-    - bridor_logo.png
+    - assets/

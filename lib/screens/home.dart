@@ -1,6 +1,8 @@
+import 'dart:convert';
+
 import 'package:connectnwork/constants.dart';
-import 'package:connectnwork/screens/job_details.dart';
 import 'package:connectnwork/widgets/app_bar.dart';
+import 'package:connectnwork/widgets/drawer.dart';
 import 'package:connectnwork/widgets/earning_card.dart';
 import 'package:connectnwork/widgets/job_card.dart';
 import 'package:connectnwork/widgets/scaffold_gradient.dart';
@@ -23,73 +25,90 @@ class _HomeScreenState extends State<HomeScreen> {
     return ScaffoldGradient(
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        drawer: const Drawer(
-          backgroundColor: Colors.black,
-        ),
+        drawer: const CustomDrawer(),
         appBar: const CustomAppBar(
           title: 'Home',
           drawer: true,
         ),
-        body: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 12,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        kStackIndex = 0;
-                      });
-                    },
-                    child: ToggleButton(
-                      icon: Icons.search,
-                      text: 'Browse Jobs',
-                      active: kStackIndex == 0 ? true : false,
+        body: FutureBuilder<String>(
+          future: sanityClient
+              .fetch('*[_type == "screens" && slug.current == "home"]'),
+          builder: (context, snapshot) {
+            final res = snapshot.data;
+
+            if (res != null) {
+              final data = jsonDecode(res);
+              print(data['result'][0]['contents']);
+
+              for (int i = 0; i < data['result'][0]['contents'].length; i++) {}
+
+              return SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: Column(
+                  children: [
+                    const SizedBox(
+                      height: 12,
                     ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        kStackIndex = 1;
-                      });
-                    },
-                    child: ToggleButton(
-                      icon: Icons.calendar_month,
-                      text: 'Schedule',
-                      active: kStackIndex == 1 ? true : false,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              kStackIndex = 0;
+                            });
+                          },
+                          child: ToggleButton(
+                            icon: Icons.search,
+                            text: 'Browse Jobs',
+                            active: kStackIndex == 0 ? true : false,
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              kStackIndex = 1;
+                            });
+                          },
+                          child: ToggleButton(
+                            icon: Icons.calendar_month,
+                            text: 'Schedule',
+                            active: kStackIndex == 1 ? true : false,
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              kStackIndex = 2;
+                            });
+                          },
+                          child: ToggleButton(
+                            icon: Icons.attach_money,
+                            text: 'Earnings',
+                            active: kStackIndex == 2 ? true : false,
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        kStackIndex = 2;
-                      });
-                    },
-                    child: ToggleButton(
-                      icon: Icons.attach_money,
-                      text: 'Earnings',
-                      active: kStackIndex == 2 ? true : false,
+                    IndexedStack(
+                      index: kStackIndex,
+                      children: const [
+                        BrowseJobs(),
+                        Schedule(),
+                        Center(
+                          child: Earnings(),
+                        ),
+                      ],
                     ),
-                  ),
-                ],
-              ),
-              IndexedStack(
-                index: kStackIndex,
-                children: const [
-                  BrowseJobs(),
-                  Schedule(),
-                  Center(
-                    child: Earnings(),
-                  ),
-                ],
-              ),
-            ],
-          ),
+                  ],
+                ),
+              );
+            } else {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          },
         ),
       ),
     );

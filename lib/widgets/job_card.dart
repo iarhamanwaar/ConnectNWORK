@@ -15,6 +15,10 @@ class JobCard extends StatelessWidget {
   final bool detailed;
   final bool hired;
   final bool inProgress;
+  final bool completed;
+  final bool pending;
+  final bool cancelled;
+  final bool cancelledByEmployer;
 
   const JobCard({
     Key? key,
@@ -29,6 +33,10 @@ class JobCard extends StatelessWidget {
     this.detailed = false,
     this.hired = false,
     this.inProgress = false,
+    this.completed = false,
+    this.pending = false,
+    this.cancelled = false,
+    this.cancelledByEmployer = false,
   }) : super(key: key);
 
   @override
@@ -344,6 +352,119 @@ class JobCard extends StatelessWidget {
                                 color: Color(0xFFFF974A),
                                 fontSize: 14,
                               ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                    ],
+                  ),
+                if (completed)
+                  Row(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF3DD598).withOpacity(0.1),
+                        ),
+                        child: const Center(
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 24.0,
+                              vertical: 3,
+                            ),
+                            child: Text(
+                              'Completed',
+                              style: TextStyle(
+                                color: Color(0xFF3DD598),
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                    ],
+                  ),
+                if (pending)
+                  Row(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF50B5FF).withOpacity(0.1),
+                        ),
+                        child: const Center(
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 24.0,
+                              vertical: 3,
+                            ),
+                            child: Text(
+                              'Pending',
+                              style: TextStyle(
+                                color: Color(0xFF50B5FF),
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                    ],
+                  ),
+                if (cancelled)
+                  Row(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFFC5A5A).withOpacity(0.1),
+                        ),
+                        child: const Center(
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 24.0,
+                              vertical: 3,
+                            ),
+                            child: Text(
+                              'Cancelled',
+                              style: TextStyle(
+                                color: Color(0xFFFC5A5A),
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                    ],
+                  ),
+                if (cancelledByEmployer)
+                  Row(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFFC5A5A).withOpacity(0.1),
+                        ),
+                        child: const Center(
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 24.0,
+                              vertical: 3,
+                            ),
+                            child: Text(
+                              'Cancelled by\nEmployer',
+                              style: TextStyle(
+                                color: Color(0xFFFC5A5A),
+                                fontSize: 14,
+                              ),
+                              textAlign: TextAlign.center,
                             ),
                           ),
                         ),
