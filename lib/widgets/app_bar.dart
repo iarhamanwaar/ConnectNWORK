@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -14,6 +16,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      systemOverlayStyle: const SystemUiOverlayStyle(
+        systemNavigationBarColor: Colors.black,
+        statusBarColor: Colors.black,
+      ),
       title: Text(
         title,
         style: GoogleFonts.montserrat(
@@ -25,36 +31,41 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       leading: Builder(
         builder: (BuildContext context) {
           if (!drawer) {
-            return IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              icon: Image.asset(
-                'assets/back_button.png',
-                fit: BoxFit.cover,
+            return Padding(
+              padding: const EdgeInsets.only(left: 20.0),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: SvgPicture.asset(
+                  'assets/back_button.svg',
+                ),
               ),
             );
           } else {
-            return IconButton(
-              onPressed: () {
-                Scaffold.of(context).openDrawer();
-              },
-              tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
-              icon: Image.asset(
-                'assets/drawer_icon.png',
-                fit: BoxFit.cover,
+            return Padding(
+              padding: const EdgeInsets.only(left: 20.0),
+              child: GestureDetector(
+                onTap: () {
+                  Scaffold.of(context).openDrawer();
+                },
+                child: SvgPicture.asset(
+                  'assets/drawer_icon.svg',
+                ),
               ),
             );
           }
         },
       ),
       actions: [
-        IconButton(
-          icon: Image.asset(
-            'assets/bell_icon.png',
-            fit: BoxFit.cover,
+        Padding(
+          padding: const EdgeInsets.only(right: 20.0),
+          child: GestureDetector(
+            child: SvgPicture.asset(
+              'assets/bell_icon.svg',
+            ),
+            onTap: () {},
           ),
-          onPressed: () {},
         ),
       ],
       backgroundColor: Colors.transparent,

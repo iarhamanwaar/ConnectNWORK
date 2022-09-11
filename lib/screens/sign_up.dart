@@ -1,4 +1,7 @@
 import 'package:connectnwork/constants.dart';
+import 'package:connectnwork/providers/facebook_sign_in.dart';
+import 'package:connectnwork/providers/google_sign_in.dart';
+import 'package:connectnwork/utils.dart';
 import 'package:connectnwork/widgets/scaffold_gradient.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
@@ -44,7 +47,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 Column(
                   children: [
                     const SizedBox(
-                      height: 50,
+                      height: 60,
                     ),
                     SvgPicture.asset(
                       'assets/logo.svg',
@@ -65,11 +68,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        SvgPicture.asset('assets/fb-logo.svg'),
+                        GestureDetector(
+                          onTap: () async {
+                            await FacebookSign.facebookLogin(context);
+                          },
+                          child: SvgPicture.asset(
+                            'assets/fb-logo.svg',
+                          ),
+                        ),
                         const SizedBox(
                           width: 50,
                         ),
-                        SvgPicture.asset('assets/google-logo.svg'),
+                        GestureDetector(
+                          onTap: () async {
+                            await GoogleSign.googleLogin(context);
+                          },
+                          child: SvgPicture.asset('assets/google-logo.svg'),
+                        ),
                       ],
                     ),
                     const SizedBox(
@@ -105,24 +120,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   validator: (value) {
                                     if (value == '') {
                                       return 'Please enter a first name';
+                                    } else {
+                                      return null;
                                     }
                                   },
-                                  decoration: const InputDecoration(
+                                  decoration: InputDecoration(
+                                    hintStyle: GoogleFonts.montserrat(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400,
+                                      color: const Color(0xFF77838F),
+                                    ),
                                     isDense: true,
                                     contentPadding:
-                                        EdgeInsets.fromLTRB(0, 15, 0, 15),
+                                        const EdgeInsets.fromLTRB(0, 15, 0, 15),
                                     hintText: 'First name',
-                                    border: UnderlineInputBorder(
+                                    border: const UnderlineInputBorder(
                                       borderSide: BorderSide(
                                         color: Color(0xFFEBEBEB),
                                         width: 1,
                                       ),
                                     ),
-                                  ),
-                                  style: GoogleFonts.montserrat(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w400,
-                                    color: const Color(0xFF77838F),
                                   ),
                                 ),
                               ),
@@ -143,24 +160,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   validator: (value) {
                                     if (value == '') {
                                       return 'Please enter a last name';
+                                    } else {
+                                      return null;
                                     }
                                   },
-                                  decoration: const InputDecoration(
+                                  decoration: InputDecoration(
+                                    hintStyle: GoogleFonts.montserrat(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400,
+                                      color: const Color(0xFF77838F),
+                                    ),
                                     isDense: true,
                                     contentPadding:
-                                        EdgeInsets.fromLTRB(0, 15, 0, 15),
+                                        const EdgeInsets.fromLTRB(0, 15, 0, 15),
                                     hintText: 'Last name',
-                                    border: UnderlineInputBorder(
+                                    border: const UnderlineInputBorder(
                                       borderSide: BorderSide(
                                         color: Color(0xFFEBEBEB),
                                         width: 1,
                                       ),
                                     ),
-                                  ),
-                                  style: GoogleFonts.montserrat(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w400,
-                                    color: const Color(0xFF77838F),
                                   ),
                                 ),
                               ),
@@ -192,22 +211,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                       return null;
                                     }
                                   },
-                                  decoration: const InputDecoration(
+                                  decoration: InputDecoration(
+                                    hintStyle: GoogleFonts.montserrat(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400,
+                                      color: const Color(0xFF77838F),
+                                    ),
                                     isDense: true,
                                     contentPadding:
-                                        EdgeInsets.fromLTRB(0, 15, 0, 15),
+                                        const EdgeInsets.fromLTRB(0, 15, 0, 15),
                                     hintText: 'Email',
-                                    border: UnderlineInputBorder(
+                                    border: const UnderlineInputBorder(
                                       borderSide: BorderSide(
                                         color: Color(0xFFEBEBEB),
                                         width: 1,
                                       ),
                                     ),
-                                  ),
-                                  style: GoogleFonts.montserrat(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w400,
-                                    color: const Color(0xFF77838F),
                                   ),
                                 ),
                               ),
@@ -229,31 +248,36 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   validator: (value) {
                                     if (value == '') {
                                       return 'Please enter a password';
+                                    } else {
+                                      return null;
                                     }
                                   },
-                                  decoration: const InputDecoration(
+                                  decoration: InputDecoration(
+                                    hintStyle: GoogleFonts.montserrat(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400,
+                                      color: const Color(0xFF77838F),
+                                    ),
                                     isDense: true,
                                     contentPadding:
-                                        EdgeInsets.fromLTRB(0, 15, 0, 15),
+                                        const EdgeInsets.fromLTRB(0, 15, 0, 15),
                                     hintText: 'Password',
-                                    border: UnderlineInputBorder(
+                                    border: const UnderlineInputBorder(
                                       borderSide: BorderSide(
                                         color: Color(0xFFEBEBEB),
                                         width: 1,
                                       ),
                                     ),
                                   ),
-                                  style: GoogleFonts.montserrat(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w400,
-                                    color: const Color(0xFF77838F),
-                                  ),
                                 ),
                               ),
                               IconButton(
-                                icon: const Icon(
-                                  Icons.visibility,
-                                  color: Color(0xFF77838F),
+                                splashRadius: 20.0,
+                                icon: Icon(
+                                  passwordVisible
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                  color: const Color(0xFF77838F),
                                 ),
                                 onPressed: () {
                                   setState(() {
@@ -279,31 +303,36 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   validator: (value) {
                                     if (value != _passwordController.text) {
                                       return 'Passowrd does not match';
+                                    } else {
+                                      return null;
                                     }
                                   },
-                                  decoration: const InputDecoration(
+                                  decoration: InputDecoration(
+                                    hintStyle: GoogleFonts.montserrat(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400,
+                                      color: const Color(0xFF77838F),
+                                    ),
                                     isDense: true,
                                     contentPadding:
-                                        EdgeInsets.fromLTRB(0, 15, 0, 15),
+                                        const EdgeInsets.fromLTRB(0, 15, 0, 15),
                                     hintText: 'Confirm password',
-                                    border: UnderlineInputBorder(
+                                    border: const UnderlineInputBorder(
                                       borderSide: BorderSide(
                                         color: Color(0xFFEBEBEB),
                                         width: 1,
                                       ),
                                     ),
                                   ),
-                                  style: GoogleFonts.montserrat(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w400,
-                                    color: const Color(0xFF77838F),
-                                  ),
                                 ),
                               ),
                               IconButton(
-                                icon: const Icon(
-                                  Icons.visibility,
-                                  color: Color(0xFF77838F),
+                                splashRadius: 20,
+                                icon: Icon(
+                                  confirmPasswordVisible
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                  color: const Color(0xFF77838F),
                                 ),
                                 onPressed: () {
                                   setState(() {
@@ -392,13 +421,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                         );
 
                                         try {
-                                          await FirebaseAuth.instance
-                                              .createUserWithEmailAndPassword(
+                                          UserCredential result =
+                                              await FirebaseAuth.instance
+                                                  .createUserWithEmailAndPassword(
                                             email: _emailController.text.trim(),
                                             password: _passwordController.text,
                                           );
+                                          User user = result.user!;
+                                          user.updateDisplayName(
+                                              '${_firstNameController.text} ${_lastNameController.text}');
                                         } on FirebaseAuthException catch (e) {
-                                          print(e);
+                                          Utils.showSnackbar(e.message);
                                         }
 
                                         navigatorKey.currentState!

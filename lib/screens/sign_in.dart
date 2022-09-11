@@ -1,4 +1,7 @@
 import 'package:connectnwork/constants.dart';
+import 'package:connectnwork/providers/facebook_sign_in.dart';
+import 'package:connectnwork/providers/google_sign_in.dart';
+import 'package:connectnwork/utils.dart';
 import 'package:connectnwork/widgets/scaffold_gradient.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
@@ -37,7 +40,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 Column(
                   children: [
                     const SizedBox(
-                      height: 20,
+                      height: 30,
                     ),
                     Center(
                       child: Stack(
@@ -68,11 +71,25 @@ class _SignInScreenState extends State<SignInScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        SvgPicture.asset('assets/fb-logo.svg'),
+                        GestureDetector(
+                          onTap: () async {
+                            await FacebookSign.facebookLogin(context);
+                          },
+                          child: SvgPicture.asset(
+                            'assets/fb-logo.svg',
+                          ),
+                        ),
                         const SizedBox(
                           width: 50,
                         ),
-                        SvgPicture.asset('assets/google-logo.svg'),
+                        GestureDetector(
+                          onTap: () async {
+                            await GoogleSign.googleLogin(context);
+                          },
+                          child: SvgPicture.asset(
+                            'assets/google-logo.svg',
+                          ),
+                        ),
                       ],
                     ),
                     const SizedBox(
@@ -201,9 +218,13 @@ class _SignInScreenState extends State<SignInScreen> {
                                   obscureText: true,
                                   autocorrect: false,
                                   keyboardType: TextInputType.visiblePassword,
+                                  autovalidateMode:
+                                      AutovalidateMode.onUserInteraction,
                                   validator: (value) {
                                     if (value == '') {
                                       return 'Please enter a password';
+                                    } else {
+                                      return null;
                                     }
                                   },
                                   decoration: InputDecoration(
@@ -247,9 +268,14 @@ class _SignInScreenState extends State<SignInScreen> {
                                   children: [
                                     TextSpan(
                                       recognizer: TapGestureRecognizer()
-                                        ..onTap = () {
-                                          Navigator.pushNamed(
-                                              context, 'reset_password');
+                                        ..onTap = () async {
+                                          var signUp =
+                                              await Navigator.pushNamed(
+                                                  context, '/reset_password');
+
+                                          if (signUp == true) {
+                                            widget.onClickedSignUp;
+                                          }
                                         },
                                       text: 'Reset Now',
                                       style: GoogleFonts.montserrat(
@@ -290,7 +316,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                           password: _passwordController.text,
                                         );
                                       } on FirebaseAuthException catch (e) {
-                                        print(e);
+                                        Utils.showSnackbar(e.message);
                                       }
 
                                       navigatorKey.currentState!

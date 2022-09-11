@@ -36,6 +36,8 @@ dependencies:
   flutter_svg: ^1.1.5
   firebase_core: ^1.22.0
   firebase_auth: ^3.8.0
+  google_sign_in: ^5.4.1
+  flutter_facebook_auth: ^4.4.1
 
 dev_dependencies:
   flutter_test:

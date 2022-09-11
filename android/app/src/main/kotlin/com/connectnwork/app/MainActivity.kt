@@ -1,4 +1,4 @@
-package com.example.connectnwork
+package com.connectnwork.app
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -3,21 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>8401053360-4hevr7v8bvh1mvqntcrc3i8idgl4mvj4.apps.googleusercontent.com</string>
+	<string>128353766221-j20ctiv9ho1bqpi4efutmhc8lpc81sdn.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.8401053360-4hevr7v8bvh1mvqntcrc3i8idgl4mvj4</string>
+	<string>com.googleusercontent.apps.128353766221-j20ctiv9ho1bqpi4efutmhc8lpc81sdn</string>
 	<key>API_KEY</key>
-	<string>AIzaSyCX9Ddj2ckHqobDUFMfTGpOgmYTaI-ISCg</string>
+	<string>AIzaSyBZfeoCxhmTkkB1Zd7uD08gQYrrShdVnA4</string>
 	<key>GCM_SENDER_ID</key>
-	<string>8401053360</string>
+	<string>128353766221</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.connectnwork.app</string>
 	<key>PROJECT_ID</key>
-	<string>cnw-auth</string>
+	<string>cnw-auth-dev</string>
 	<key>STORAGE_BUCKET</key>
-	<string>cnw-auth.appspot.com</string>
+	<string>cnw-auth-dev.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,6 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:8401053360:ios:7827f625b8cf0a28e77d75</string>
+	<string>1:128353766221:ios:c11f4b487dfb068da8c504</string>
 </dict>
 </plist>

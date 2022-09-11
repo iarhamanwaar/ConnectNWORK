@@ -9,16 +9,11 @@ import 'package:connectnwork/screens/reset_password.dart';
 import 'package:connectnwork/screens/settings.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_sanity/flutter_sanity.dart';
+import 'package:flutter/services.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-
-  sanityClient = SanityClient(
-    dataset: 'production',
-    projectId: '7d3rcta7',
-  );
 
   runApp(const MyApp());
 }
@@ -27,9 +22,15 @@ class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
   // This widget is the root of your application.
+
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(statusBarIconBrightness: Brightness.dark),
+    );
+
     return MaterialApp(
+      scaffoldMessengerKey: messengerKey,
       navigatorKey: navigatorKey,
       debugShowCheckedModeBanner: false,
       title: 'ConnectNWork',

@@ -1,37 +1,37 @@
 {
   "project_info": {
-    "project_number": "8401053360",
-    "project_id": "cnw-auth",
-    "storage_bucket": "cnw-auth.appspot.com"
+    "project_number": "128353766221",
+    "project_id": "cnw-auth-dev",
+    "storage_bucket": "cnw-auth-dev.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:8401053360:android:43f02b15ec59e19ce77d75",
+        "mobilesdk_app_id": "1:128353766221:android:133320d1bb57b039a8c504",
         "android_client_info": {
           "package_name": "com.connectnwork.app"
         }
       },
       "oauth_client": [
         {
-          "client_id": "8401053360-ivc0lctroh6hrg4ln7j5to248rrt671f.apps.googleusercontent.com",
+          "client_id": "128353766221-24c825ldaol3tt5r394teruaqqso6ra0.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBsCaFC4p25_zN7ggBTf5EPCKEeHUqPRH4"
+          "current_key": "AIzaSyCUVyAF1-LvtmLbrykPE3wbyKDmxTxV5Q4"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "8401053360-ivc0lctroh6hrg4ln7j5to248rrt671f.apps.googleusercontent.com",
+              "client_id": "128353766221-24c825ldaol3tt5r394teruaqqso6ra0.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "8401053360-4hevr7v8bvh1mvqntcrc3i8idgl4mvj4.apps.googleusercontent.com",
+              "client_id": "128353766221-j20ctiv9ho1bqpi4efutmhc8lpc81sdn.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
                 "bundle_id": "com.connectnwork.app"

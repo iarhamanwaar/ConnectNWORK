@@ -8,6 +8,7 @@ class CustomDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String currentPage = ModalRoute.of(context)!.settings.name!;
+    print(currentPage);
 
     return Drawer(
       backgroundColor: Colors.white,

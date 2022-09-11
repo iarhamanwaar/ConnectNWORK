@@ -181,8 +181,8 @@ class _SettingsPageState extends State<SettingsPage> {
 
                           try {
                             await FirebaseAuth.instance.signOut();
-                          } on FirebaseException catch (e) {
-                            print(e);
+                          } on FirebaseException {
+                            rethrow;
                           }
 
                           navigatorKey.currentState!
