@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Connect&WORK</string>
+    <string name="app_name">Connect&amp;WORK</string>
     <string name="facebook_app_id">1325235681553071</string>
     <string name="fb_login_protocol_scheme">fb1325235681553071</string>
     <string name="facebook_client_token">dceb620a8f112d1cde90af5a369abb2d</string>

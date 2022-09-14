@@ -1,7 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:connectnwork/constants.dart';
+import 'package:connectnwork/dialogs/id_verification_dialog.dart';
 import 'package:connectnwork/widgets/app_bar.dart';
+import 'package:connectnwork/widgets/drawer.dart';
 import 'package:connectnwork/widgets/scaffold_gradient.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class MyProfileScreen extends StatefulWidget {
@@ -19,9 +23,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
     return ScaffoldGradient(
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        drawer: const Drawer(
-          backgroundColor: Colors.black,
-        ),
+        drawer: const CustomDrawer(),
         appBar: const CustomAppBar(
           title: 'My Profile',
           drawer: true,
@@ -63,15 +65,23 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Image.asset(
-                              'profile_avatar.png',
+                            SizedBox(
+                              height: 80,
+                              width: 80,
+                              child: CachedNetworkImage(
+                                imageUrl: myProfile.user.picture,
+                                placeholder: (context, url) =>
+                                    const CircularProgressIndicator(),
+                                errorWidget: (context, url, error) =>
+                                    const Icon(Icons.error),
+                              ),
                             ),
                             const SizedBox(
                               width: 10,
                             ),
                             Flexible(
                               child: Text(
-                                'Jennifer Lawson',
+                                myProfile.user.fullName,
                                 style: GoogleFonts.montserrat(
                                   fontWeight: FontWeight.w600,
                                   color: Colors.black,
@@ -135,7 +145,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                         contentPadding:
                                             const EdgeInsets.symmetric(
                                                 horizontal: 0, vertical: 5),
-                                        hintText: '+1 514 521 2526',
+                                        hintText: myProfile.user.phoneNumber,
                                         hintStyle: GoogleFonts.montserrat(
                                           fontWeight: FontWeight.w400,
                                           color: Colors.black,
@@ -219,231 +229,240 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                       const SizedBox(
                         height: 25,
                       ),
-                      Container(
-                        padding: const EdgeInsets.only(
-                          top: 18.0,
-                          left: 12.0,
-                          right: 12.0,
-                          bottom: 40.0,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          border: Border.all(
-                            color: const Color(0xFF009FE3),
+                      if (!myProfile.user.idVerified)
+                        Container(
+                          padding: const EdgeInsets.only(
+                            top: 18.0,
+                            left: 12.0,
+                            right: 12.0,
+                            bottom: 40.0,
                           ),
-                          borderRadius: BorderRadius.circular(20),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Color(0x0ff0000d),
-                              blurRadius: 30,
-                              offset: Offset(0, 20),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border.all(
+                              color: const Color(0xFF009FE3),
                             ),
-                          ],
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Container(
-                                  height: 36,
-                                  width: 36,
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFF009FE3),
-                                    borderRadius: BorderRadius.circular(
-                                      60.0,
+                            borderRadius: BorderRadius.circular(20),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Color(0x0ff0000d),
+                                blurRadius: 30,
+                                offset: Offset(0, 20),
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    height: 36,
+                                    width: 36,
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFF009FE3),
+                                      borderRadius: BorderRadius.circular(
+                                        60.0,
+                                      ),
                                     ),
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      '1',
-                                      style: GoogleFonts.montserrat(
-                                        fontSize: 24,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.white,
+                                    child: Center(
+                                      child: Text(
+                                        '1',
+                                        style: GoogleFonts.montserrat(
+                                          fontSize: 24,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.white,
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                                Container(
-                                  height: 2,
-                                  width: 30,
-                                  color: const Color(0xFF009FE3),
-                                ),
-                                Container(
-                                  height: 2,
-                                  width: 30,
-                                  color: currentStep == 2
-                                      ? const Color(0xFF009FE3)
-                                      : const Color(0xFFE3F1FC),
-                                ),
-                                Container(
-                                  height: 36,
-                                  width: 36,
-                                  decoration: BoxDecoration(
+                                  Container(
+                                    height: 2,
+                                    width: 30,
+                                    color: const Color(0xFF009FE3),
+                                  ),
+                                  Container(
+                                    height: 2,
+                                    width: 30,
                                     color: currentStep == 2
                                         ? const Color(0xFF009FE3)
-                                        : Colors.white,
-                                    border: currentStep == 2
-                                        ? Border.all(
-                                            color: const Color(0xFF000000),
-                                          )
-                                        : Border.all(
-                                            color: const Color(0xFFE3F1FC),
-                                          ),
-                                    borderRadius: BorderRadius.circular(
-                                      60.0,
-                                    ),
+                                        : const Color(0xFFE3F1FC),
                                   ),
-                                  child: Center(
-                                    child: Text(
-                                      '2',
-                                      style: GoogleFonts.montserrat(
-                                        fontSize: 24,
-                                        fontWeight: FontWeight.w600,
-                                        color: currentStep == 2
-                                            ? Colors.white
-                                            : const Color(0xFF009FE3),
+                                  Container(
+                                    height: 36,
+                                    width: 36,
+                                    decoration: BoxDecoration(
+                                      color: currentStep == 2
+                                          ? const Color(0xFF009FE3)
+                                          : Colors.white,
+                                      border: currentStep == 2
+                                          ? Border.all(
+                                              color: const Color(0xFF000000),
+                                            )
+                                          : Border.all(
+                                              color: const Color(0xFFE3F1FC),
+                                            ),
+                                      borderRadius: BorderRadius.circular(
+                                        60.0,
+                                      ),
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        '2',
+                                        style: GoogleFonts.montserrat(
+                                          fontSize: 24,
+                                          fontWeight: FontWeight.w600,
+                                          color: currentStep == 2
+                                              ? Colors.white
+                                              : const Color(0xFF009FE3),
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 22,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFF009FE3)
-                                        .withOpacity(0.06),
-                                    border: Border.all(
-                                      color: const Color(0xFF009FE3),
-                                    ),
-                                    borderRadius: BorderRadius.circular(
-                                      5.0,
-                                    ),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 26.0,
-                                      vertical: 6.0,
-                                    ),
-                                    child: Text(
-                                      'ID verification',
-                                      style: GoogleFonts.montserrat(
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 12,
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 22,
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFF009FE3)
+                                          .withOpacity(0.06),
+                                      border: Border.all(
                                         color: const Color(0xFF009FE3),
                                       ),
+                                      borderRadius: BorderRadius.circular(
+                                        5.0,
+                                      ),
                                     ),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  width: 13.5,
-                                ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: currentStep == 2
-                                        ? const Color(0xFF009FE3)
-                                            .withOpacity(0.06)
-                                        : const Color(0xFFFFFFFF),
-                                    border: currentStep == 2
-                                        ? Border.all(
-                                            color: const Color(0xFF009FE3),
-                                          )
-                                        : Border.all(
-                                            color: const Color(0xFFE5E5E5),
-                                          ),
-                                    borderRadius: BorderRadius.circular(
-                                      5.0,
-                                    ),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 26.0,
-                                      vertical: 6.0,
-                                    ),
-                                    child: Text(
-                                      'Files',
-                                      style: GoogleFonts.montserrat(
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 12,
-                                        color: currentStep == 2
-                                            ? const Color(0xFF009FE3)
-                                            : const Color(0xFFE5E5E5),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 26.0,
+                                        vertical: 6.0,
+                                      ),
+                                      child: Text(
+                                        'ID verification',
+                                        style: GoogleFonts.montserrat(
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 12,
+                                          color: const Color(0xFF009FE3),
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 25,
-                            ),
-                            Text(
-                              'Certn is a third-party service that Connect&Work uses to perform compliant ID verification.',
-                              style: GoogleFonts.montserrat(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.black,
-                                height: 2,
+                                  const SizedBox(
+                                    width: 13.5,
+                                  ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: currentStep == 2
+                                          ? const Color(0xFF009FE3)
+                                              .withOpacity(0.06)
+                                          : const Color(0xFFFFFFFF),
+                                      border: currentStep == 2
+                                          ? Border.all(
+                                              color: const Color(0xFF009FE3),
+                                            )
+                                          : Border.all(
+                                              color: const Color(0xFFE5E5E5),
+                                            ),
+                                      borderRadius: BorderRadius.circular(
+                                        5.0,
+                                      ),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 26.0,
+                                        vertical: 6.0,
+                                      ),
+                                      child: Text(
+                                        'Files',
+                                        style: GoogleFonts.montserrat(
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 12,
+                                          color: currentStep == 2
+                                              ? const Color(0xFF009FE3)
+                                              : const Color(0xFFE5E5E5),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                            Text(
-                              'Certn will keep your information private and secure.',
-                              style: GoogleFonts.montserrat(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.black,
-                                height: 2,
+                              const SizedBox(
+                                height: 25,
                               ),
-                            ),
-                            const SizedBox(
-                              height: 76,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                ElevatedButton(
-                                  onPressed: () {},
-                                  style: ButtonStyle(
-                                    shape: MaterialStateProperty.all<
-                                        RoundedRectangleBorder>(
-                                      RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
-                                      ),
-                                    ),
-                                    backgroundColor: MaterialStateProperty.all(
-                                      const Color(0xFF009FE3),
-                                    ),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 15.0,
-                                      vertical: 3.0,
-                                    ),
-                                    child: Text(
-                                      'Go to Certn',
-                                      style: GoogleFonts.montserrat(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
+                              Text(
+                                'Certn is a third-party service that Connect&Work uses to perform compliant ID verification.',
+                                style: GoogleFonts.montserrat(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black,
+                                  height: 2,
                                 ),
-                              ],
-                            ),
-                          ],
+                              ),
+                              Text(
+                                'Certn will keep your information private and secure.',
+                                style: GoogleFonts.montserrat(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black,
+                                  height: 2,
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 76,
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  ElevatedButton(
+                                    onPressed: () async {
+                                      if (myProfile.user.dob == null ||
+                                          myProfile.user.address == null) {
+                                        //await addressPopUp();
+                                        showIDVerificationDialog(context);
+                                      }
+                                    },
+                                    style: ButtonStyle(
+                                      shape: MaterialStateProperty.all<
+                                          RoundedRectangleBorder>(
+                                        RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
+                                        ),
+                                      ),
+                                      elevation: MaterialStateProperty.all(0),
+                                      backgroundColor:
+                                          MaterialStateProperty.all(
+                                        const Color(0xFF009FE3),
+                                      ),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 15.0,
+                                        vertical: 3.0,
+                                      ),
+                                      child: Text(
+                                        'Go to Certn',
+                                        style: GoogleFonts.montserrat(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
                     ],
                   ),
                 ),
@@ -454,6 +473,221 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
               );
             }
           },
+        ),
+      ),
+    );
+  }
+
+  Future addressPopUp() {
+    final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+    final TextEditingController dobController = TextEditingController();
+    final TextEditingController addressController = TextEditingController();
+    final TextEditingController aptController = TextEditingController();
+
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) => Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Form(
+          key: formKey,
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.fromLTRB(19, 18, 19, 35),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    navigatorKey.currentState!.pop();
+                  },
+                  child: SvgPicture.asset(
+                    'assets/back_button.svg',
+                  ),
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                Text(
+                  'Date of birth',
+                  style: GoogleFonts.montserrat(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.black,
+                  ),
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        controller: dobController,
+                        autocorrect: false,
+                        keyboardType: TextInputType.text,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        validator: (value) {
+                          if (value == '') {
+                            return 'Please enter a date of birth';
+                          } else {
+                            return null;
+                          }
+                        },
+                        decoration: InputDecoration(
+                          isDense: true,
+                          contentPadding:
+                              const EdgeInsets.fromLTRB(17.0, 14.0, 10.0, 16.0),
+                          border: OutlineInputBorder(
+                            borderSide: const BorderSide(
+                              color: Color(0xFFDADADA),
+                            ),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          suffixIcon: const Icon(
+                            Icons.calendar_month_outlined,
+                          ),
+                          hintText: 'DD/MM/YYYY',
+                          hintStyle: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: Color(0xFFDADADA),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                Text(
+                  'Address',
+                  style: GoogleFonts.montserrat(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.black,
+                  ),
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        onChanged: (value) {},
+                        controller: addressController,
+                        autocorrect: false,
+                        keyboardType: TextInputType.text,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        validator: (value) {
+                          if (value == '') {
+                            return 'Please enter an address';
+                          } else {
+                            return null;
+                          }
+                        },
+                        decoration: InputDecoration(
+                          isDense: true,
+                          contentPadding:
+                              const EdgeInsets.fromLTRB(17.0, 14.0, 10.0, 16.0),
+                          border: OutlineInputBorder(
+                            borderSide: const BorderSide(
+                              color: Color(0xFFDADADA),
+                            ),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          hintText: 'Search address',
+                          hintStyle: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: Color(0xFFDADADA),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  children: [
+                    SizedBox(
+                      width: 115,
+                      child: TextFormField(
+                        controller: aptController,
+                        autocorrect: false,
+                        keyboardType: TextInputType.text,
+                        decoration: InputDecoration(
+                          isDense: true,
+                          contentPadding:
+                              const EdgeInsets.fromLTRB(17.0, 14.0, 10.0, 16.0),
+                          border: OutlineInputBorder(
+                            borderSide: const BorderSide(
+                              color: Color(0xFFDADADA),
+                            ),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          hintText: 'Apt #',
+                          hintStyle: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: Color(0xFFDADADA),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 82,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        if (formKey.currentState!.validate()) {
+                          // TODO: call patch api, show loading, recall myprofile maybe, move to next page
+                          navigatorKey.currentState!.pop();
+                          showIDVerificationDialog(context);
+                        }
+                      },
+                      style: ButtonStyle(
+                        elevation: MaterialStateProperty.all(0),
+                        shape: MaterialStateProperty.all(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                        ),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 8.0,
+                          horizontal: 10.0,
+                        ),
+                        child: Center(
+                          child: Text(
+                            'Next',
+                            style: GoogleFonts.montserrat(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ),
         ),
       ),
     );

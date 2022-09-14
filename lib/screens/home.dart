@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:connectnwork/constants.dart';
+import 'package:connectnwork/repos/user_repository.dart';
 import 'package:connectnwork/widgets/app_bar.dart';
 import 'package:connectnwork/widgets/drawer.dart';
 import 'package:connectnwork/widgets/earning_card.dart';
@@ -30,17 +31,18 @@ class _HomeScreenState extends State<HomeScreen> {
           title: 'Home',
           drawer: true,
         ),
-        body: FutureBuilder<String>(
-          future: sanityClient
-              .fetch('*[_type == "screens" && slug.current == "home"]'),
-          builder: (context, snapshot) {
-            final res = snapshot.data;
+        body: FutureBuilder(
+          future: Future.wait([
+            sanityClient
+                .fetch('*[_type == "screens" && slug.current == "home"]'),
+            UserRepository.get(),
+          ]),
+          builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
+            if (snapshot.data != null) {
+              final sanity = snapshot.data![0];
+              myProfile = snapshot.data![1];
 
-            if (res != null) {
-              final data = jsonDecode(res);
-              print(data['result'][0]['contents']);
-
-              for (int i = 0; i < data['result'][0]['contents'].length; i++) {}
+              final data = jsonDecode(sanity);
 
               return SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),

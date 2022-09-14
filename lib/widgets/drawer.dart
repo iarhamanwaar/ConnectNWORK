@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:connectnwork/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -35,12 +36,22 @@ class CustomDrawer extends StatelessWidget {
               child: Center(
                 child: Column(
                   children: [
-                    Image.asset('assets/profile_avatar.png'),
+                    SizedBox(
+                      height: 100,
+                      width: 100,
+                      child: CachedNetworkImage(
+                        imageUrl: myProfile.user.picture,
+                        placeholder: (context, url) =>
+                            const CircularProgressIndicator(),
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
+                      ),
+                    ),
                     const SizedBox(
                       height: 15,
                     ),
                     Text(
-                      'Jennifer Lawson',
+                      myProfile.user.fullName,
                       style: GoogleFonts.montserrat(
                         fontWeight: FontWeight.w600,
                         fontSize: 18,
