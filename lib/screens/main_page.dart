@@ -1,3 +1,4 @@
+import 'package:connectnwork/constants.dart';
 import 'package:connectnwork/screens/auth_page.dart';
 import 'package:connectnwork/screens/home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,6 +9,8 @@ class MainPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    myLocale = Localizations.localeOf(context);
+
     return Scaffold(
       body: StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),

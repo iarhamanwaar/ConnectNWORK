@@ -1,17 +1,14 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:connectnwork/constants.dart';
+import 'package:connectnwork/models/job_model.dart';
 import 'package:connectnwork/screens/job_details.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 class JobCard extends StatelessWidget {
-  final String title;
-  final double rate;
-  final String vendor;
-  final String time;
-  final String logo;
-  final String location;
-  final bool tips;
-  final bool recurring;
+  final Job job;
   final bool detailed;
   final bool hired;
   final bool inProgress;
@@ -19,17 +16,11 @@ class JobCard extends StatelessWidget {
   final bool pending;
   final bool cancelled;
   final bool cancelledByEmployer;
+  final bool dateWithTime;
 
   const JobCard({
     Key? key,
-    required this.title,
-    required this.rate,
-    required this.vendor,
-    required this.time,
-    this.recurring = false,
-    required this.logo,
-    this.tips = false,
-    required this.location,
+    required this.job,
     this.detailed = false,
     this.hired = false,
     this.inProgress = false,
@@ -37,22 +28,42 @@ class JobCard extends StatelessWidget {
     this.pending = false,
     this.cancelled = false,
     this.cancelledByEmployer = false,
+    this.dateWithTime = false,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final String title = job.title!;
+    final double rate = job.shift!.ratePerHr!;
+    final String vendor = job.employer!.name!;
+    final String time;
+    String startTime = DateFormat.Hm().format(job.shift!.startTime!.toLocal());
+    String endTime = DateFormat.Hm().format(job.shift!.endTime!.toLocal());
+
+    if (dateWithTime) {
+      String date = DateFormat.yMMMMd().format(job.shift!.startTime!.toLocal());
+      time = '$date $startTime - $endTime';
+    } else {
+      time = '$startTime - $endTime';
+    }
+    final String logo = job.employer!.logo!;
+    final String location = job.location!.formattedAddress!;
+    final bool tips = job.shift!.tip!;
+    final bool recurring = job.shift!.days!.length > 1 ? true : false;
+
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const JobDetailsScreen(),
+            builder: (context) => JobDetailsScreen(
+              job: job,
+            ),
           ),
         );
       },
       child: Container(
         width: double.infinity,
-        height: detailed ? 268 : 200,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
           color: Colors.white,
@@ -139,8 +150,13 @@ class JobCard extends StatelessWidget {
                   Positioned(
                     top: 0,
                     right: 0,
-                    child: Image.asset(
-                      logo,
+                    child: SizedBox(
+                      height: 65,
+                      width: 65,
+                      child: CachedNetworkImage(
+                        imageUrl: logo,
+                        errorWidget: (context, url, error) => const Icon(Icons.error),
+                      ),
                     ),
                   ),
                 ],
@@ -189,38 +205,24 @@ class JobCard extends StatelessWidget {
                             const SizedBox(
                               height: 10,
                             ),
-                            Text(
-                              'Lun 30 Mai - Mar 31 Mai - Jeu 2 Juin',
-                              style: GoogleFonts.montserrat(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                                letterSpacing: 1.5,
-                                height: 1.5,
-                                color: kOrangePrimary,
+                            SizedBox(
+                              height: 80,
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: job.shift!.days!.length,
+                                itemBuilder: (context, index) {
+                                  return Text(
+                                    DateFormat.yMMMMEEEEd().format(job.shift!.days![index]),
+                                    style: GoogleFonts.montserrat(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w600,
+                                      letterSpacing: 2,
+                                      height: 1.8,
+                                      color: kOrangePrimary,
+                                    ),
+                                  );
+                                },
                               ),
-                            ),
-                            Text(
-                              'Dim 5 Juin - Lun 6 Juin - Mer 8 Juin',
-                              style: GoogleFonts.montserrat(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                                letterSpacing: 1.5,
-                                height: 1.5,
-                                color: kOrangePrimary,
-                              ),
-                            ),
-                            Text(
-                              'Ven 10 Juin - Sam 11 Juin - Dim 12 Juin',
-                              style: GoogleFonts.montserrat(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                                letterSpacing: 1.5,
-                                height: 1.5,
-                                color: kOrangePrimary,
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 14,
                             ),
                           ],
                         ),
@@ -475,6 +477,9 @@ class JobCard extends StatelessWidget {
                     ],
                   ),
               ],
+            ),
+            const SizedBox(
+              height: 15,
             ),
           ],
         ),

@@ -1,6 +1,9 @@
 import 'dart:convert';
 
 import 'package:connectnwork/constants.dart';
+import 'package:connectnwork/models/job_model.dart';
+import 'package:connectnwork/models/sanity_home.dart' as sanity;
+import 'package:connectnwork/repos/jobs_repository.dart';
 import 'package:connectnwork/repos/user_repository.dart';
 import 'package:connectnwork/widgets/app_bar.dart';
 import 'package:connectnwork/widgets/drawer.dart';
@@ -9,6 +12,7 @@ import 'package:connectnwork/widgets/job_card.dart';
 import 'package:connectnwork/widgets/scaffold_gradient.dart';
 import 'package:connectnwork/widgets/toggle_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -24,75 +28,71 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return ScaffoldGradient(
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        drawer: const CustomDrawer(),
-        appBar: const CustomAppBar(
-          title: 'Home',
-          drawer: true,
-        ),
-        body: FutureBuilder(
-          future: Future.wait([
-            sanityClient
-                .fetch('*[_type == "screens" && slug.current == "home"]'),
-            UserRepository.get(),
-          ]),
-          builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
-            if (snapshot.data != null) {
-              final sanity = snapshot.data![0];
-              myProfile = snapshot.data![1];
+      child: FutureBuilder(
+        future: Future.wait([
+          UserRepository.get(),
+          sanityClient.fetch('*[_type == "screens" && slug.current == "home"]'),
+        ]),
+        builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
+          if (snapshot.data != null) {
+            myProfile = snapshot.data![0];
+            final data = jsonDecode(snapshot.data![1]);
 
-              final data = jsonDecode(sanity);
-
-              return SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                child: Column(
-                  children: [
-                    const SizedBox(
-                      height: 12,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              kStackIndex = 0;
-                            });
-                          },
-                          child: ToggleButton(
-                            icon: Icons.search,
-                            text: 'Browse Jobs',
-                            active: kStackIndex == 0 ? true : false,
-                          ),
+            return Scaffold(
+              backgroundColor: Colors.transparent,
+              drawer: const CustomDrawer(),
+              appBar: CustomAppBar(
+                title: data['screenName'][myLocale.languageCode],
+                drawer: true,
+              ),
+              body: Column(
+                children: [
+                  const SizedBox(
+                    height: 12,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            kStackIndex = 0;
+                          });
+                        },
+                        child: ToggleButton(
+                          icon: Icons.search,
+                          text: data['contents'][0]['text'][myLocale.languageCode],
+                          active: kStackIndex == 0 ? true : false,
                         ),
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              kStackIndex = 1;
-                            });
-                          },
-                          child: ToggleButton(
-                            icon: Icons.calendar_month,
-                            text: 'Schedule',
-                            active: kStackIndex == 1 ? true : false,
-                          ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            kStackIndex = 1;
+                          });
+                        },
+                        child: ToggleButton(
+                          icon: Icons.calendar_month,
+                          text: 'Schedule',
+                          active: kStackIndex == 1 ? true : false,
                         ),
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              kStackIndex = 2;
-                            });
-                          },
-                          child: ToggleButton(
-                            icon: Icons.attach_money,
-                            text: 'Earnings',
-                            active: kStackIndex == 2 ? true : false,
-                          ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            kStackIndex = 2;
+                          });
+                        },
+                        child: ToggleButton(
+                          icon: Icons.attach_money,
+                          text: 'Earnings',
+                          active: kStackIndex == 2 ? true : false,
                         ),
-                      ],
-                    ),
-                    IndexedStack(
+                      ),
+                    ],
+                  ),
+                  Expanded(
+                    child: IndexedStack(
                       index: kStackIndex,
                       children: const [
                         BrowseJobs(),
@@ -102,16 +102,16 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ],
                     ),
-                  ],
-                ),
-              );
-            } else {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-          },
-        ),
+                  ),
+                ],
+              ),
+            );
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        },
       ),
     );
   }
@@ -122,54 +122,111 @@ class BrowseJobs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const SizedBox(
-          height: 60,
-        ),
-        Padding(
-          padding: const EdgeInsets.only(
-            left: 20.0,
-            right: 20,
-          ),
-          child: Column(
-            children: const [
-              JobCard(
-                title: 'Aide Boulanger',
-                rate: 18.75,
-                vendor: 'Bridor Boucherville',
-                time: '14:30 - 22:30',
-                recurring: true,
-                location: '4455 Rue cote Marquette H2G 1R2, Laval, QC',
-                tips: true,
-                logo: 'assets/bridor_logo.png',
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              JobCard(
-                title: 'Bus Boy',
-                rate: 15.75,
-                vendor: 'Mac Donald Downtown Montreal',
-                time: 'Sep 1st, 2021 18:00 - 22:30',
-                location: '4455 Rue cote Marquette H2G 1R2, Laval, QC',
-                logo: 'assets/mcdonalds_logo.png',
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              JobCard(
-                title: 'Bus Boy',
-                rate: 15.75,
-                vendor: 'Mac Donald Downtown Montreal',
-                time: 'Sep 1st, 2021 18:00 - 22:30',
-                location: '4455 Rue cote Marquette H2G 1R2, Laval, QC',
-                logo: 'assets/mcdonalds_logo.png',
-              ),
-            ],
-          ),
-        ),
-      ],
+    return FutureBuilder<List<Job>>(
+      future: JobsRepository.get(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          final data = snapshot.data!;
+          return ListView.builder(
+            shrinkWrap: true,
+            itemCount: data.length,
+            padding: const EdgeInsets.only(
+              left: 20.0,
+              right: 20,
+            ),
+            itemBuilder: (context, index) {
+              final Job job = data[index];
+
+              return Column(
+                children: [
+                  if (index == 0)
+                    const SizedBox(
+                      height: 60,
+                    ),
+                  JobCard(
+                    job: job,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                ],
+              );
+            },
+          );
+        } else if (snapshot.hasError) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 58.0,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const SizedBox(
+                  height: 80,
+                ),
+                SvgPicture.asset(
+                  'assets/no_shifts.svg',
+                ),
+                const SizedBox(
+                  height: 25,
+                ),
+                Text(
+                  'No shifts available',
+                  style: GoogleFonts.montserrat(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 18,
+                    color: Colors.black,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(
+                  height: 25,
+                ),
+                Text(
+                  'We have no shifts available yet but we are working on it.',
+                  style: GoogleFonts.montserrat(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
+                    color: const Color(0xFF77838F),
+                    height: 1.5,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(
+                  height: 25,
+                ),
+                Text(
+                  'Please activate your notications to be the among the first to receive shifts opportunities.',
+                  style: GoogleFonts.montserrat(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
+                    color: const Color(0xFF77838F),
+                    height: 1.5,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(
+                  height: 25,
+                ),
+                Text(
+                  'Thank you!',
+                  style: GoogleFonts.montserrat(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
+                    color: const Color(0xFF77838F),
+                    height: 1.5,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          );
+        } else {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+      },
     );
   }
 }
@@ -216,15 +273,15 @@ class Schedule extends StatelessWidget {
           const SizedBox(
             height: 18,
           ),
-          const JobCard(
-            title: 'Bus Boy',
-            rate: 15.75,
-            vendor: 'Mac Donald Downtown Montreal',
-            time: 'Sep 1st, 2021 18:00 - 22:30',
-            location: '4455 Rue cote Marquette H2G 1R2, Laval, QC',
-            logo: 'assets/mcdonalds_logo.png',
-            inProgress: true,
-          ),
+          // const JobCard(
+          //   title: 'Bus Boy',
+          //   rate: 15.75,
+          //   vendor: 'Mac Donald Downtown Montreal',
+          //   time: 'Sep 1st, 2021 18:00 - 22:30',
+          //   location: '4455 Rue cote Marquette H2G 1R2, Laval, QC',
+          //   logo: 'assets/mcdonalds_logo.png',
+          //   inProgress: true,
+          // ),
           const SizedBox(
             height: 103,
           ),
@@ -238,16 +295,16 @@ class Schedule extends StatelessWidget {
           const SizedBox(
             height: 9,
           ),
-          const JobCard(
-            title: 'Bus Boy',
-            rate: 15.75,
-            vendor: 'Mac Donald Downtown Montreal',
-            time: '18:00 - 22:30',
-            location: '4455 Rue cote Marquette H2G 1R2, Laval, QC',
-            logo: 'assets/mcdonalds_logo.png',
-            recurring: true,
-            hired: true,
-          ),
+          // const JobCard(
+          //   title: 'Bus Boy',
+          //   rate: 15.75,
+          //   vendor: 'Mac Donald Downtown Montreal',
+          //   time: '18:00 - 22:30',
+          //   location: '4455 Rue cote Marquette H2G 1R2, Laval, QC',
+          //   logo: 'assets/mcdonalds_logo.png',
+          //   recurring: true,
+          //   hired: true,
+          // ),
         ],
       ),
     );

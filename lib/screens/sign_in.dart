@@ -37,7 +37,6 @@ class _SignInScreenState extends State<SignInScreen> {
             child: Form(
               key: _formKey,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Column(
                     children: [
@@ -160,17 +159,13 @@ class _SignInScreenState extends State<SignInScreen> {
                                     controller: _emailController,
                                     autocorrect: false,
                                     keyboardType: TextInputType.emailAddress,
-                                    autovalidateMode:
-                                        AutovalidateMode.onUserInteraction,
+                                    autovalidateMode: AutovalidateMode.onUserInteraction,
                                     validator: (value) {
-                                      String pattern =
-                                          r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]"
+                                      String pattern = r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]"
                                           r"{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]"
                                           r"{0,253}[a-zA-Z0-9])?)*$";
                                       RegExp regex = RegExp(pattern);
-                                      if (value == null ||
-                                          value.isEmpty ||
-                                          !regex.hasMatch(value)) {
+                                      if (value == null || value.isEmpty || !regex.hasMatch(value)) {
                                         return 'Enter a valid email address';
                                       } else {
                                         return null;
@@ -178,8 +173,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                     },
                                     decoration: InputDecoration(
                                       isDense: true,
-                                      contentPadding: const EdgeInsets.fromLTRB(
-                                          23, 15, 23, 15),
+                                      contentPadding: const EdgeInsets.fromLTRB(23, 15, 23, 15),
                                       hintText: 'email@gmail.com',
                                       hintStyle: GoogleFonts.montserrat(
                                         fontSize: 16,
@@ -188,8 +182,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                       ),
                                       border: OutlineInputBorder(
                                         borderSide: BorderSide(
-                                          color: const Color(0xFF77838F)
-                                              .withOpacity(0.2),
+                                          color: const Color(0xFF77838F).withOpacity(0.2),
                                           width: 2,
                                         ),
                                         borderRadius: BorderRadius.circular(10),
@@ -220,8 +213,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                     obscureText: true,
                                     autocorrect: false,
                                     keyboardType: TextInputType.visiblePassword,
-                                    autovalidateMode:
-                                        AutovalidateMode.onUserInteraction,
+                                    autovalidateMode: AutovalidateMode.onUserInteraction,
                                     validator: (value) {
                                       if (value == '') {
                                         return 'Please enter a password';
@@ -231,10 +223,8 @@ class _SignInScreenState extends State<SignInScreen> {
                                     },
                                     decoration: InputDecoration(
                                       isDense: true,
-                                      contentPadding: const EdgeInsets.fromLTRB(
-                                          23, 15, 23, 15),
-                                      hintText:
-                                          '.    .    .    .    .    .    .    .    .    .    .    .    .',
+                                      contentPadding: const EdgeInsets.fromLTRB(23, 15, 23, 15),
+                                      hintText: '.    .    .    .    .    .    .    .    .    .    .    .    .',
                                       hintStyle: GoogleFonts.montserrat(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w600,
@@ -242,8 +232,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                       ),
                                       border: OutlineInputBorder(
                                         borderSide: BorderSide(
-                                          color: const Color(0xFF77838F)
-                                              .withOpacity(0.2),
+                                          color: const Color(0xFF77838F).withOpacity(0.2),
                                           width: 2,
                                         ),
                                         borderRadius: BorderRadius.circular(10),
@@ -271,9 +260,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                       TextSpan(
                                         recognizer: TapGestureRecognizer()
                                           ..onTap = () async {
-                                            var signUp =
-                                                await Navigator.pushNamed(
-                                                    context, '/reset_password');
+                                            var signUp = await Navigator.pushNamed(context, '/reset_password');
 
                                             if (signUp == true) {
                                               widget.onClickedSignUp;
@@ -306,45 +293,37 @@ class _SignInScreenState extends State<SignInScreen> {
                                           barrierDismissible: false,
                                           builder: (context) {
                                             return const Center(
-                                              child:
-                                                  CircularProgressIndicator(),
+                                              child: CircularProgressIndicator(),
                                             );
                                           },
                                         );
 
                                         try {
-                                          await FirebaseAuth.instance
-                                              .signInWithEmailAndPassword(
+                                          await FirebaseAuth.instance.signInWithEmailAndPassword(
                                             email: _emailController.text.trim(),
                                             password: _passwordController.text,
                                           );
                                         } on FirebaseAuthException catch (e) {
                                           if (e.code == 'weak-password') {
-                                            Utils.showSnackbar(
-                                                'The password provided is too weak.');
-                                          } else if (e.code ==
-                                              'email-already-in-use') {
-                                            Utils.showSnackbar(
-                                                'The account already exists for that email.');
+                                            Utils.showSnackbar('The password provided is too weak.');
+                                          } else if (e.code == 'email-already-in-use') {
+                                            Utils.showSnackbar('The account already exists for that email.');
                                           } else {
                                             Utils.showSnackbar(e.message);
                                           }
                                         }
 
-                                        navigatorKey.currentState!
-                                            .popUntil((route) => route.isFirst);
+                                        navigatorKey.currentState!.popUntil((route) => route.isFirst);
                                       }
                                     },
                                     style: ButtonStyle(
                                       elevation: MaterialStateProperty.all(0),
-                                      backgroundColor:
-                                          MaterialStateProperty.all(
+                                      backgroundColor: MaterialStateProperty.all(
                                         const Color(0xFF009FE3),
                                       ),
                                       shape: MaterialStateProperty.all(
                                         RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
+                                          borderRadius: BorderRadius.circular(10),
                                         ),
                                       ),
                                       padding: MaterialStateProperty.all(
@@ -371,6 +350,9 @@ class _SignInScreenState extends State<SignInScreen> {
                       ),
                     ],
                   ),
+                  const SizedBox(
+                    height: 150,
+                  ),
                   RichText(
                     text: TextSpan(
                       style: GoogleFonts.montserrat(
@@ -381,8 +363,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       text: 'First time here? ',
                       children: [
                         TextSpan(
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = widget.onClickedSignUp,
+                          recognizer: TapGestureRecognizer()..onTap = widget.onClickedSignUp,
                           text: 'Sign Up',
                           style: GoogleFonts.montserrat(
                             fontSize: 16,

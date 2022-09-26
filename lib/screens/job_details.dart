@@ -1,4 +1,5 @@
 import 'package:connectnwork/constants.dart';
+import 'package:connectnwork/models/job_model.dart';
 import 'package:connectnwork/widgets/app_bar.dart';
 import 'package:connectnwork/widgets/job_card.dart';
 import 'package:connectnwork/widgets/scaffold_gradient.dart';
@@ -6,7 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class JobDetailsScreen extends StatefulWidget {
-  const JobDetailsScreen({Key? key}) : super(key: key);
+  final Job job;
+
+  const JobDetailsScreen({
+    Key? key,
+    required this.job,
+  }) : super(key: key);
 
   @override
   State<JobDetailsScreen> createState() => _JobDetailsScreenState();
@@ -15,6 +21,12 @@ class JobDetailsScreen extends StatefulWidget {
 class _JobDetailsScreenState extends State<JobDetailsScreen> {
   @override
   Widget build(BuildContext context) {
+    bool detailed = false;
+
+    if (widget.job.shift!.days!.length > 1) {
+      detailed = true;
+    }
+
     return ScaffoldGradient(
       child: Scaffold(
         backgroundColor: Colors.transparent,
@@ -34,16 +46,10 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
                 const SizedBox(
                   height: 50,
                 ),
-                const JobCard(
-                  title: 'Aide Boulanger',
-                  rate: 18.75,
-                  vendor: 'Bridor Boucherville',
-                  time: '14:30 - 22:30',
-                  recurring: true,
-                  location: '4455 Rue cote Marquette H2G 1R2, Laval, QC',
-                  tips: true,
-                  logo: 'assets/bridor_logo.png',
-                  detailed: true,
+                JobCard(
+                  job: widget.job,
+                  dateWithTime: !detailed,
+                  detailed: detailed,
                 ),
                 const SizedBox(
                   height: 34,
@@ -75,7 +81,7 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
                     ],
                   ),
                   child: Text(
-                    'According to legend, ancestors of today\'s Oromo people in a region of Kaffa in Ethiopia were believed to have been the first to recognize the energizing effect of the coffee plant. [6]',
+                    widget.job.description!,
                     style: GoogleFonts.montserrat(
                       fontWeight: FontWeight.w400,
                       fontSize: 16,
@@ -88,8 +94,9 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    if (false) {
+                    if (myProfile!.user!.interac == null || myProfile!.user!.interac! == '') {
                       showDialog(
+                        barrierDismissible: false,
                         context: context,
                         builder: (_) => AlertDialog(
                           shape: RoundedRectangleBorder(
@@ -116,7 +123,13 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
                                   height: 50,
                                 ),
                                 OutlinedButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    navigatorKey.currentState!.popUntil((route) => route.isFirst);
+
+                                    navigatorKey.currentState!.pushReplacementNamed('/main');
+                                    navigatorKey.currentState!.pushNamed('/settings');
+                                    navigatorKey.currentState!.pushNamed('/payments');
+                                  },
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                                     child: Text(
@@ -135,10 +148,9 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
                           ),
                         ),
                       );
-                    }
-
-                    if (true) {
+                    } else {
                       showDialog(
+                        barrierDismissible: false,
                         context: context,
                         builder: (_) => AlertDialog(
                           shape: RoundedRectangleBorder(
@@ -166,7 +178,9 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
                                   height: 50,
                                 ),
                                 OutlinedButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    navigatorKey.currentState!.pop();
+                                  },
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                                     child: Text(

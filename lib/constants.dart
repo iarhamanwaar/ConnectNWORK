@@ -11,7 +11,9 @@ final navigatorKey = GlobalKey<NavigatorState>();
 
 final messengerKey = GlobalKey<ScaffoldMessengerState>();
 
-late MyProfile myProfile;
+MyProfile? myProfile;
+
+late Locale myLocale;
 
 const Color kBluePrimary = Color(0xFF009FE3);
 

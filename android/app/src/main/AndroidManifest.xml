@@ -4,6 +4,14 @@
         <provider android:authorities="com.facebook.katana.provider.PlatformProvider"/>
     </queries>
     <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- Provide required visibility configuration for API level 30 and above -->
+    <queries>
+    <!-- If your app opens websites -->
+    <intent>
+        <action android:name="android.intent.action.VIEW" />
+        <data android:scheme="https" />
+    </intent>
+    </queries>
 
    <application
         android:label="connectnwork"

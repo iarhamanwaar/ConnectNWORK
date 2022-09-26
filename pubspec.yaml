@@ -32,7 +32,6 @@ dependencies:
 
   cupertino_icons: ^1.0.2
   google_fonts: ^3.0.1
-  flutter_sanity: ^1.0.1
   flutter_svg: ^1.1.5
   firebase_core: ^1.22.0
   firebase_auth: ^3.8.0
@@ -40,12 +39,19 @@ dependencies:
   flutter_facebook_auth: ^4.4.1
   cached_network_image:
   image_picker: ^0.8.5+3
+  url_launcher: ^6.1.5
+  intl: ^0.17.0
+  flutter_sanity: ^1.0.1
+  json_annotation: ^4.7.0
+  http: ^0.13.5
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
   flutter_lints: ^2.0.0
+  build_runner: ^2.2.1
+  json_serializable: ^6.4.0
 
 flutter:
   uses-material-design: true

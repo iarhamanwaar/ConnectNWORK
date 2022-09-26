@@ -9,7 +9,6 @@ class CustomDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String currentPage = ModalRoute.of(context)!.settings.name!;
-    print(currentPage);
 
     return Drawer(
       backgroundColor: Colors.white,
@@ -39,19 +38,21 @@ class CustomDrawer extends StatelessWidget {
                     SizedBox(
                       height: 100,
                       width: 100,
-                      child: CachedNetworkImage(
-                        imageUrl: myProfile.user.picture,
-                        placeholder: (context, url) =>
-                            const CircularProgressIndicator(),
-                        errorWidget: (context, url, error) =>
-                            const Icon(Icons.error),
-                      ),
+                      child: myProfile == null
+                          ? const CircleAvatar(
+                              child: Icon(Icons.account_circle),
+                            )
+                          : CachedNetworkImage(
+                              imageUrl: myProfile!.user!.picture!,
+                              placeholder: (context, url) => const CircularProgressIndicator(),
+                              errorWidget: (context, url, error) => const Icon(Icons.error),
+                            ),
                     ),
                     const SizedBox(
                       height: 15,
                     ),
                     Text(
-                      myProfile.user.fullName,
+                      myProfile == null ? 'Loading' : myProfile!.user!.fullName!,
                       style: GoogleFonts.montserrat(
                         fontWeight: FontWeight.w600,
                         fontSize: 18,
@@ -68,7 +69,7 @@ class CustomDrawer extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15.0),
             child: Container(
-              decoration: currentPage == '/home'
+              decoration: currentPage == '/home' || currentPage == '/main'
                   ? BoxDecoration(
                       color: const Color(0xFFE3F1FC),
                       borderRadius: BorderRadius.circular(10),
@@ -83,7 +84,7 @@ class CustomDrawer extends StatelessWidget {
                 leading: Icon(
                   Icons.home_outlined,
                   size: 28,
-                  color: currentPage == '/home' ? kBluePrimary : Colors.black,
+                  color: currentPage == '/home' || currentPage == '/main' ? kBluePrimary : Colors.black,
                 ),
                 title: Row(
                   children: [
@@ -95,15 +96,13 @@ class CustomDrawer extends StatelessWidget {
                       style: GoogleFonts.montserrat(
                         fontWeight: FontWeight.w600,
                         fontSize: 14,
-                        color: currentPage == '/home'
-                            ? kBluePrimary
-                            : Colors.black,
+                        color: currentPage == '/home' || currentPage == '/main' ? kBluePrimary : Colors.black,
                       ),
                     ),
                   ],
                 ),
                 onTap: () {
-                  if (currentPage != '/home') {
+                  if (currentPage != '/home' && currentPage != '/main') {
                     Navigator.pushReplacementNamed(context, '/home');
                   }
                 },
@@ -131,8 +130,7 @@ class CustomDrawer extends StatelessWidget {
                 leading: Icon(
                   Icons.description_outlined,
                   size: 28,
-                  color:
-                      currentPage == '/my_jobs' ? kBluePrimary : Colors.black,
+                  color: currentPage == '/my_jobs' ? kBluePrimary : Colors.black,
                 ),
                 title: Row(
                   children: [
@@ -144,9 +142,7 @@ class CustomDrawer extends StatelessWidget {
                       style: GoogleFonts.montserrat(
                         fontWeight: FontWeight.w600,
                         fontSize: 14,
-                        color: currentPage == '/my_jobs'
-                            ? kBluePrimary
-                            : Colors.black,
+                        color: currentPage == '/my_jobs' ? kBluePrimary : Colors.black,
                       ),
                     ),
                   ],
@@ -180,9 +176,7 @@ class CustomDrawer extends StatelessWidget {
                 leading: Icon(
                   Icons.person_outlined,
                   size: 28,
-                  color: currentPage == '/my_profile'
-                      ? kBluePrimary
-                      : Colors.black,
+                  color: currentPage == '/my_profile' ? kBluePrimary : Colors.black,
                 ),
                 title: Row(
                   children: [
@@ -194,9 +188,7 @@ class CustomDrawer extends StatelessWidget {
                       style: GoogleFonts.montserrat(
                         fontWeight: FontWeight.w600,
                         fontSize: 14,
-                        color: currentPage == '/my_profile'
-                            ? kBluePrimary
-                            : Colors.black,
+                        color: currentPage == '/my_profile' ? kBluePrimary : Colors.black,
                       ),
                     ),
                   ],
@@ -230,8 +222,7 @@ class CustomDrawer extends StatelessWidget {
                 leading: Icon(
                   Icons.settings_outlined,
                   size: 28,
-                  color:
-                      currentPage == '/settings' ? kBluePrimary : Colors.black,
+                  color: currentPage == '/settings' ? kBluePrimary : Colors.black,
                 ),
                 title: Row(
                   children: [
@@ -243,9 +234,7 @@ class CustomDrawer extends StatelessWidget {
                       style: GoogleFonts.montserrat(
                         fontWeight: FontWeight.w600,
                         fontSize: 14,
-                        color: currentPage == '/settings'
-                            ? kBluePrimary
-                            : Colors.black,
+                        color: currentPage == '/settings' ? kBluePrimary : Colors.black,
                       ),
                     ),
                   ],
@@ -279,8 +268,7 @@ class CustomDrawer extends StatelessWidget {
                 leading: Icon(
                   Icons.support_agent_outlined,
                   size: 28,
-                  color:
-                      currentPage == '/support' ? kBluePrimary : Colors.black,
+                  color: currentPage == '/support' ? kBluePrimary : Colors.black,
                 ),
                 title: Row(
                   children: [
@@ -292,16 +280,15 @@ class CustomDrawer extends StatelessWidget {
                       style: GoogleFonts.montserrat(
                         fontWeight: FontWeight.w600,
                         fontSize: 14,
-                        color: currentPage == '/support'
-                            ? kBluePrimary
-                            : Colors.black,
+                        color: currentPage == '/support' ? kBluePrimary : Colors.black,
                       ),
                     ),
                   ],
                 ),
                 onTap: () {
-                  // Update the state of the app.
-                  // ...
+                  if (currentPage != '/support') {
+                    Navigator.pushReplacementNamed(context, '/support');
+                  }
                 },
               ),
             ),

@@ -113,27 +113,27 @@ class Timesheets extends StatelessWidget {
         SizedBox(
           height: 62,
         ),
-        JobCard(
-          title: 'Aide Boulanger',
-          rate: 18.75,
-          vendor: 'Bridor Boucherville',
-          time: 'Sep 4, 2021 19:00 - 23:30',
-          location: '4455 Rue cote Marquette H2G 1R2, Laval, QC',
-          logo: 'assets/bridor_logo.png',
-          completed: true,
-        ),
+        // JobCard(
+        //   title: 'Aide Boulanger',
+        //   rate: 18.75,
+        //   vendor: 'Bridor Boucherville',
+        //   time: 'Sep 4, 2021 19:00 - 23:30',
+        //   location: '4455 Rue cote Marquette H2G 1R2, Laval, QC',
+        //   logo: 'assets/bridor_logo.png',
+        //   completed: true,
+        // ),
         SizedBox(
           height: 25,
         ),
-        JobCard(
-          title: 'Valet',
-          rate: 15.55,
-          vendor: 'Best Western Montreal Downtown',
-          time: 'Sep 5, 2021 08:00 - 15:30',
-          location: '4455 Rue cote Marquette H2G 1R2, Laval, QC',
-          logo: 'assets/best_western_logo.png',
-          completed: true,
-        ),
+        // JobCard(
+        //   title: 'Valet',
+        //   rate: 15.55,
+        //   vendor: 'Best Western Montreal Downtown',
+        //   time: 'Sep 5, 2021 08:00 - 15:30',
+        //   location: '4455 Rue cote Marquette H2G 1R2, Laval, QC',
+        //   logo: 'assets/best_western_logo.png',
+        //   completed: true,
+        // ),
       ],
     );
   }
@@ -149,27 +149,27 @@ class Pending extends StatelessWidget {
         SizedBox(
           height: 62,
         ),
-        JobCard(
-          title: 'Aide Boulanger',
-          rate: 18.75,
-          vendor: 'Bridor Boucherville',
-          time: 'Sep 4, 2021 19:00 - 23:30',
-          location: '4455 Rue cote Marquette H2G 1R2, Laval, QC',
-          logo: 'assets/bridor_logo.png',
-          pending: true,
-        ),
+        // JobCard(
+        //   title: 'Aide Boulanger',
+        //   rate: 18.75,
+        //   vendor: 'Bridor Boucherville',
+        //   time: 'Sep 4, 2021 19:00 - 23:30',
+        //   location: '4455 Rue cote Marquette H2G 1R2, Laval, QC',
+        //   logo: 'assets/bridor_logo.png',
+        //   pending: true,
+        // ),
         SizedBox(
           height: 25,
         ),
-        JobCard(
-          title: 'Valet',
-          rate: 15.55,
-          vendor: 'Best Western Montreal Downtown',
-          time: 'Sep 5, 2021 08:00 - 15:30',
-          location: '4455 Rue cote Marquette H2G 1R2, Laval, QC',
-          logo: 'assets/best_western_logo.png',
-          pending: true,
-        ),
+        // JobCard(
+        //   title: 'Valet',
+        //   rate: 15.55,
+        //   vendor: 'Best Western Montreal Downtown',
+        //   time: 'Sep 5, 2021 08:00 - 15:30',
+        //   location: '4455 Rue cote Marquette H2G 1R2, Laval, QC',
+        //   logo: 'assets/best_western_logo.png',
+        //   pending: true,
+        // ),
       ],
     );
   }
@@ -185,27 +185,27 @@ class Cancelled extends StatelessWidget {
         SizedBox(
           height: 62,
         ),
-        JobCard(
-          title: 'Aide Boulanger',
-          rate: 18.75,
-          vendor: 'Bridor Boucherville',
-          time: 'Sep 4, 2021 19:00 - 23:30',
-          location: '4455 Rue cote Marquette H2G 1R2, Laval, QC',
-          logo: 'assets/bridor_logo.png',
-          cancelled: true,
-        ),
+        // JobCard(
+        //   title: 'Aide Boulanger',
+        //   rate: 18.75,
+        //   vendor: 'Bridor Boucherville',
+        //   time: 'Sep 4, 2021 19:00 - 23:30',
+        //   location: '4455 Rue cote Marquette H2G 1R2, Laval, QC',
+        //   logo: 'assets/bridor_logo.png',
+        //   cancelled: true,
+        // ),
         SizedBox(
           height: 25,
         ),
-        JobCard(
-          title: 'Valet',
-          rate: 15.55,
-          vendor: 'Best Western Montreal Downtown',
-          time: 'Sep 5, 2021 08:00 - 15:30',
-          location: '4455 Rue cote Marquette H2G 1R2, Laval, QC',
-          logo: 'assets/best_western_logo.png',
-          cancelledByEmployer: true,
-        ),
+        // JobCard(
+        //   title: 'Valet',
+        //   rate: 15.55,
+        //   vendor: 'Best Western Montreal Downtown',
+        //   time: 'Sep 5, 2021 08:00 - 15:30',
+        //   location: '4455 Rue cote Marquette H2G 1R2, Laval, QC',
+        //   logo: 'assets/best_western_logo.png',
+        //   cancelledByEmployer: true,
+        // ),
       ],
     );
   }

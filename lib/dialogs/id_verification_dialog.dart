@@ -4,12 +4,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 
-Future<void> showIDVerificationDialog(BuildContext context) async {
+Future<void> showIDVerificationDialog() async {
   int currentStep = 0;
 
   return await showDialog(
     barrierDismissible: false,
-    context: context,
+    context: navigatorKey.currentContext!,
     builder: (context) {
       return StatefulBuilder(
         builder: (context, setState) {
