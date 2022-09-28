@@ -1,12 +1,18 @@
+import 'dart:convert';
+
 import 'package:connectnwork/models/job_model.dart';
 import 'package:connectnwork/services/api_service.dart';
 
 class JobsRepository {
-  static Future<List<Job>> get() async {
+  static Future<List<Job>?> get() async {
     try {
       final response = await APIService.getWithAuth(
         endpoint: '/api/jobs/browse',
       );
+
+      if (response.body == '[]') {
+        return null;
+      }
 
       return jobFromJson(response.body);
     } catch (e) {

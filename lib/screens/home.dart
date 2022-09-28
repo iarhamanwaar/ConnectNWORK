@@ -31,18 +31,18 @@ class _HomeScreenState extends State<HomeScreen> {
       child: FutureBuilder(
         future: Future.wait([
           UserRepository.get(),
-          sanityClient.fetch('*[_type == "screens" && slug.current == "home"]'),
+          //sanityClient.fetch('*[_type == "screens" && slug.current == "home"]'),
         ]),
         builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
           if (snapshot.data != null) {
             myProfile = snapshot.data![0];
-            final data = jsonDecode(snapshot.data![1]);
+            //final data = jsonDecode(snapshot.data![1]);
 
             return Scaffold(
               backgroundColor: Colors.transparent,
               drawer: const CustomDrawer(),
-              appBar: CustomAppBar(
-                title: data['screenName'][myLocale.languageCode],
+              appBar: const CustomAppBar(
+                title: 'Home',
                 drawer: true,
               ),
               body: Column(
@@ -61,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         },
                         child: ToggleButton(
                           icon: Icons.search,
-                          text: data['contents'][0]['text'][myLocale.languageCode],
+                          text: 'Browse',
                           active: kStackIndex == 0 ? true : false,
                         ),
                       ),
@@ -122,11 +122,11 @@ class BrowseJobs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<Job>>(
+    return FutureBuilder<List<Job>?>(
       future: JobsRepository.get(),
       builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          final data = snapshot.data!;
+        final data = snapshot.data;
+        if (data != null) {
           return ListView.builder(
             shrinkWrap: true,
             itemCount: data.length,
@@ -153,7 +153,7 @@ class BrowseJobs extends StatelessWidget {
               );
             },
           );
-        } else if (snapshot.hasError) {
+        } else if (data == null) {
           return Padding(
             padding: const EdgeInsets.symmetric(
               horizontal: 58.0,
