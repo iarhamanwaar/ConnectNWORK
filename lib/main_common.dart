@@ -1,3 +1,4 @@
+import 'package:connectnwork/config_reader.dart';
 import 'package:connectnwork/constants.dart';
 import 'package:connectnwork/screens/delete_account.dart';
 import 'package:connectnwork/screens/home.dart';
@@ -16,7 +17,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-Future<void> main() async {
+Future<void> mainCommon(String env) async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   LocalNotificationService.initialize();
@@ -27,8 +28,12 @@ Future<void> main() async {
     ),
   );
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  // Load the JSON config into memory
+  await ConfigReader.initialize();
 
-  runApp(const MyApp());
+  runApp(
+    const MyApp(),
+  );
 }
 
 class MyApp extends StatelessWidget {

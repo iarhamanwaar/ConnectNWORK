@@ -1,12 +1,11 @@
 import 'dart:convert';
 
+import 'package:connectnwork/config_reader.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 
 mixin APIService {
-  static const devUrl = 'https://dev-api.connectnwork.com';
-
-  static const baseUrl = devUrl;
+  static final baseUrl = ConfigReader.getServer();
 
   static Future<http.Response> get({
     required String endpoint,
