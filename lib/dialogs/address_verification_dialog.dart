@@ -21,10 +21,10 @@ Future<void> showAddressVerificationDialog() async {
     dobController.text = myProfile!.user!.dob.toString();
   }
 
-  if (myProfile!.user!.address != null) {
+  if (myProfile!.user!.address != null && myProfile!.user!.address!.formattedAddress != null) {
     addressController.text = myProfile!.user!.address!.formattedAddress!;
     if (myProfile!.user!.address!.apt != null) aptController.text = myProfile!.user!.address!.apt;
-    //selectedAddress = myProfile.user!.address;
+    selectedAddress = myProfile!.user!.address;
   }
 
   return showDialog(

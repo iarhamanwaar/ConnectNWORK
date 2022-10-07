@@ -7,12 +7,20 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:128353766221:android:133320d1bb57b039a8c504",
+        "mobilesdk_app_id": "1:128353766221:android:946e5d73357cb413a8c504",
         "android_client_info": {
-          "package_name": "com.connectnwork.app"
+          "package_name": "com.connectnwork.dev.app"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "128353766221-gvovn5jkdjoptoq559b81pmrb5ibl8j5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.connectnwork.dev.app",
+            "certificate_hash": "9480a12374e784ea514869ccb218d64574adad74"
+          }
+        },
         {
           "client_id": "128353766221-24c825ldaol3tt5r394teruaqqso6ra0.apps.googleusercontent.com",
           "client_type": 3

@@ -60,7 +60,7 @@ class _Step1State extends State<Step1> {
     'Visa',
   ];
 
-  var dropdownValue = null;
+  String? dropdownValue;
 
   final ImagePicker picker = ImagePicker();
 

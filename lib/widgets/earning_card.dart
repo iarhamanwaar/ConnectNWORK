@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 class EarningCard extends StatelessWidget {
   final String title;
   final String vendor;
-  final int bill;
+  final double bill;
   final String shiftId;
 
   const EarningCard({
@@ -31,7 +31,7 @@ class EarningCard extends StatelessWidget {
         ],
       ),
       padding: const EdgeInsets.symmetric(
-        horizontal: 14.0,
+        horizontal: 18.0,
         vertical: 20,
       ),
       child: Column(
@@ -80,6 +80,9 @@ class EarningCard extends StatelessWidget {
               fontWeight: FontWeight.w600,
               letterSpacing: 1.5,
             ),
+          ),
+          const SizedBox(
+            height: 10,
           ),
         ],
       ),

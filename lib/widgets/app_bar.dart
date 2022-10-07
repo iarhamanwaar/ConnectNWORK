@@ -1,3 +1,4 @@
+import 'package:connectnwork/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
@@ -61,10 +62,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         Padding(
           padding: const EdgeInsets.only(right: 20.0),
           child: GestureDetector(
+            onTap: () {
+              navigatorKey.currentState!.pushNamed('/notifications');
+            },
             child: SvgPicture.asset(
               'assets/bell_icon.svg',
             ),
-            onTap: () {},
           ),
         ),
       ],

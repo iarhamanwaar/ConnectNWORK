@@ -7,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -72,23 +73,61 @@ class _SignInScreenState extends State<SignInScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          GestureDetector(
-                            onTap: () async {
-                              await FacebookSign.facebookLogin(context);
-                            },
-                            child: SvgPicture.asset(
-                              'assets/fb-logo.svg',
+                          Container(
+                            height: 50,
+                            width: 50,
+                            decoration: const BoxDecoration(
+                              color: Color(0xFF4267B2),
+                              shape: BoxShape.circle,
+                            ),
+                            child: IconButton(
+                              onPressed: () async {
+                                await FacebookSign.facebookLogin(context);
+                              },
+                              color: Colors.white,
+                              icon: const Icon(
+                                FontAwesomeIcons.facebookF,
+                              ),
                             ),
                           ),
                           const SizedBox(
-                            width: 50,
+                            width: 25,
                           ),
-                          GestureDetector(
-                            onTap: () async {
-                              await GoogleSign.googleLogin(context);
-                            },
-                            child: SvgPicture.asset(
-                              'assets/google-logo.svg',
+                          Container(
+                            height: 50,
+                            width: 50,
+                            decoration: const BoxDecoration(
+                              color: Colors.black,
+                              shape: BoxShape.circle,
+                            ),
+                            child: IconButton(
+                              onPressed: () {
+                                // todo: apple sign in
+                              },
+                              color: Colors.white,
+                              icon: const Icon(
+                                FontAwesomeIcons.apple,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 25,
+                          ),
+                          Container(
+                            height: 50,
+                            width: 50,
+                            decoration: const BoxDecoration(
+                              color: Color(0xFFDB4437),
+                              shape: BoxShape.circle,
+                            ),
+                            child: IconButton(
+                              onPressed: () async {
+                                await GoogleSign.googleLogin(context);
+                              },
+                              color: Colors.white,
+                              icon: const Icon(
+                                FontAwesomeIcons.google,
+                              ),
                             ),
                           ),
                         ],

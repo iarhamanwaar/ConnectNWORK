@@ -1,15 +1,17 @@
 import 'package:connectnwork/constants.dart';
 import 'package:connectnwork/screens/delete_account.dart';
 import 'package:connectnwork/screens/home.dart';
-import 'package:connectnwork/screens/job_details.dart';
 import 'package:connectnwork/screens/main_page.dart';
 import 'package:connectnwork/screens/my_jobs.dart';
 import 'package:connectnwork/screens/my_profile.dart';
-import 'package:connectnwork/screens/notifications.dart';
+import 'package:connectnwork/screens/notfications.dart';
+import 'package:connectnwork/screens/notification_settings.dart';
 import 'package:connectnwork/screens/payments_setup.dart';
 import 'package:connectnwork/screens/reset_password.dart';
 import 'package:connectnwork/screens/settings.dart';
 import 'package:connectnwork/screens/support.dart';
+import 'package:connectnwork/screens/weekly_earnings.dart';
+import 'package:connectnwork/services/local_notification_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -17,6 +19,14 @@ import 'package:flutter/services.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  LocalNotificationService.initialize();
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarBrightness: Brightness.dark,
+      statusBarIconBrightness: Brightness.dark,
+    ),
+  );
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
   runApp(const MyApp());
 }
@@ -28,13 +38,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(
-      const SystemUiOverlayStyle(
-        statusBarBrightness: Brightness.dark,
-        statusBarIconBrightness: Brightness.dark,
-      ),
-    );
-
     return MaterialApp(
       scaffoldMessengerKey: messengerKey,
       navigatorKey: navigatorKey,
@@ -58,12 +61,14 @@ class MyApp extends StatelessWidget {
         '/home': (context) => const HomeScreen(),
         '/reset_password': (context) => const ResetPasswordPage(),
         '/my_jobs': (context) => const MyJobs(),
+        '/weekly_earnings': (context) => const WeeklyEarningsScreen(),
         '/my_profile': (context) => const MyProfileScreen(),
         '/settings': (context) => const SettingsPage(),
         '/notification_settings': (context) => const NotificationSettings(),
         '/payments_setup': (context) => const PaymentsSetupScreen(),
         '/support': (context) => const SupportScreen(),
         '/delete_account': (context) => const DeleteAccountScreen(),
+        '/notifications': (context) => const NotificationsScreen(),
       },
     );
   }

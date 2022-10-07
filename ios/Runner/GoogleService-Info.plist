@@ -3,9 +3,11 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>128353766221-j20ctiv9ho1bqpi4efutmhc8lpc81sdn.apps.googleusercontent.com</string>
+	<string>128353766221-ukdkf1nc8g3on7325otnf8jqj7m1435o.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.128353766221-j20ctiv9ho1bqpi4efutmhc8lpc81sdn</string>
+	<string>com.googleusercontent.apps.128353766221-ukdkf1nc8g3on7325otnf8jqj7m1435o</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>128353766221-l9ae8vbk2k0h7juj9vhf7n0mg1glb6qo.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
 	<string>AIzaSyBZfeoCxhmTkkB1Zd7uD08gQYrrShdVnA4</string>
 	<key>GCM_SENDER_ID</key>
@@ -13,7 +15,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.connectnwork.app</string>
+	<string>com.connectnwork.dev.app</string>
 	<key>PROJECT_ID</key>
 	<string>cnw-auth-dev</string>
 	<key>STORAGE_BUCKET</key>
@@ -29,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:128353766221:ios:c11f4b487dfb068da8c504</string>
+	<string>1:128353766221:ios:05a8d5ce2a9f36dea8c504</string>
 </dict>
 </plist>

@@ -36,8 +36,8 @@ class UserRepository {
       if (firstName != null) "firstName": firstName,
       if (lastName != null) "lastName": lastName,
       if (address != null) "address": address,
-      if (notification != null) "notification": notification,
-      if (dob != null) "dob": dob.toIso8601String(),
+      if (notification != null) "notification": notification.toString(),
+      if (dob != null) "dob": dob.toString(),
       if (locale != null) "locale": locale,
       if (picture != null) "picture": picture,
       if (type != null) "type": type,
@@ -47,7 +47,7 @@ class UserRepository {
       if (interac != null) "interac": interac,
       if (bio != null) "bio": bio,
       if (ssn != null) "ssn": ssn,
-      if (suspended != null) "suspended": suspended,
+      if (suspended != null) "suspended": suspended.toString(),
     };
 
     try {
@@ -62,17 +62,17 @@ class UserRepository {
     }
   }
 
-  static Future<MyProfile> verify() async {
-    var body;
-    try {
-      final response = await APIService.postWithAuth(
-        endpoint: '/api/employee/identity/verify',
-        body: body,
-      );
-
-      return myProfileFromJson(response.body);
-    } catch (e) {
-      throw 'Exception thrown from UserRepository while posting certn details.';
-    }
-  }
+  // static Future<MyProfile> verify() async {
+  //   var body;
+  //   try {
+  //     final response = await APIService.postWithAuth(
+  //       endpoint: '/api/employee/identity/verify',
+  //       body: body,
+  //     );
+  //
+  //     return myProfileFromJson(response.body);
+  //   } catch (e) {
+  //     throw 'Exception thrown from UserRepository while posting certn details.';
+  //   }
+  // }
 }

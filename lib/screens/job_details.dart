@@ -1,7 +1,7 @@
 import 'package:connectnwork/constants.dart';
 import 'package:connectnwork/models/job_model.dart';
 import 'package:connectnwork/widgets/app_bar.dart';
-import 'package:connectnwork/widgets/job_card.dart';
+import 'package:connectnwork/widgets/browse_job_card.dart';
 import 'package:connectnwork/widgets/scaffold_gradient.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -46,7 +46,7 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
                 const SizedBox(
                   height: 50,
                 ),
-                JobCard(
+                BrowseJobCard(
                   job: widget.job,
                   dateWithTime: !detailed,
                   detailed: detailed,

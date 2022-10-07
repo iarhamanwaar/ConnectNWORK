@@ -21,15 +21,6 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
   int currentStep = 1;
 
   @override
-  void initState() {
-    if (myProfile!.user!.phoneNumber! != '') {
-      _phoneController.text = myProfile!.user!.phoneNumber!;
-    }
-
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return ScaffoldGradient(
       child: Scaffold(
@@ -40,10 +31,17 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
           drawer: true,
         ),
         body: FutureBuilder(
-          future: sanityClient.fetch('*[_type == "screens" && slug.current == "my-profile"]'),
-          builder: (context, snapshot) {
-            final data = snapshot.data;
-            if (data != null) {
+          future: Future.wait([
+            UserRepository.get(),
+            //sanityClient.fetch('*[_type == "screens" && slug.current == "my-profile"]'),
+          ]),
+          builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
+            if (snapshot.data != null) {
+              myProfile = snapshot.data![0];
+              if (myProfile!.user!.phoneNumber != null) {
+                _phoneController.text = myProfile!.user!.phoneNumber!;
+              }
+
               return SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
                 child: Padding(
@@ -75,48 +73,31 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            SizedBox(
-                              height: 80,
-                              width: 80,
-                              child: CachedNetworkImage(
-                                imageUrl: myProfile!.user!.picture!,
-                                placeholder: (context, url) => const CircularProgressIndicator(),
-                                errorWidget: (context, url, error) => const Icon(Icons.error),
+                            GestureDetector(
+                              onTap: () async {
+                                showUploadAvatarDialog();
+                              },
+                              child: SizedBox(
+                                height: 80,
+                                width: 80,
+                                child: CachedNetworkImage(
+                                  imageUrl: myProfile!.user!.picture!,
+                                  placeholder: (context, url) => const CircularProgressIndicator(),
+                                  errorWidget: (context, url, error) => const Icon(Icons.error),
+                                ),
                               ),
                             ),
                             const SizedBox(
                               width: 20,
                             ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                GestureDetector(
-                                  onTap: () async {
-                                    showUploadAvatarDialog();
-                                  },
-                                  child: Text(
-                                    'Upload Avatar',
-                                    style: GoogleFonts.montserrat(
-                                      fontWeight: FontWeight.w400,
-                                      color: const Color(0xFFDADADA),
-                                      fontSize: 12,
-                                      decoration: TextDecoration.underline,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 15,
-                                ),
-                                Text(
-                                  myProfile!.user!.fullName!,
-                                  style: GoogleFonts.montserrat(
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.black,
-                                    fontSize: 14,
-                                    height: 1.5,
-                                  ),
-                                ),
-                              ],
+                            Text(
+                              myProfile!.user!.fullName!,
+                              style: GoogleFonts.montserrat(
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black,
+                                fontSize: 14,
+                                height: 1.5,
+                              ),
                             ),
                             const SizedBox(
                               width: 10,
@@ -191,7 +172,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                   ),
                                 ),
                                 const SizedBox(
-                                  width: 9.5,
+                                  width: 25,
                                 ),
                                 GestureDetector(
                                   onTap: () async {
@@ -219,25 +200,28 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                     ),
                                   ),
                                 ),
-                                Column(
-                                  children: [
-                                    Text(
-                                      'Phone Number Verified',
-                                      style: GoogleFonts.montserrat(
-                                        fontWeight: FontWeight.w400,
-                                        color: Colors.black,
-                                        fontSize: 8,
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 5,
-                                    ),
-                                    const Icon(
-                                      Icons.check_box,
-                                      color: Color(0xFF3DD598),
-                                    ),
-                                  ],
+                                const SizedBox(
+                                  width: 20,
                                 ),
+                                // Column(
+                                //   children: [
+                                //     Text(
+                                //       'Phone Number Verified',
+                                //       style: GoogleFonts.montserrat(
+                                //         fontWeight: FontWeight.w400,
+                                //         color: Colors.black,
+                                //         fontSize: 8,
+                                //       ),
+                                //     ),
+                                //     const SizedBox(
+                                //       height: 5,
+                                //     ),
+                                //     const Icon(
+                                //       Icons.check_box,
+                                //       color: Color(0xFF3DD598),
+                                //     ),
+                                //   ],
+                                // ),
                               ],
                             ),
                           ],
@@ -453,9 +437,10 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                 children: [
                                   ElevatedButton(
                                     onPressed: () async {
-                                      if (myProfile!.user!.dob == null || myProfile!.user!.address == null) {
-                                        showAddressVerificationDialog();
-                                      }
+                                      showAddressVerificationDialog();
+                                      // if (myProfile!.user!.dob == null || myProfile!.user!.address == null) {
+                                      //
+                                      // }
                                     },
                                     style: ButtonStyle(
                                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(

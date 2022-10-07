@@ -1,6 +1,0 @@
-package com.connectnwork.app
-
-import io.flutter.embedding.android.FlutterActivity
-
-class MainActivity: FlutterActivity() {
-}
