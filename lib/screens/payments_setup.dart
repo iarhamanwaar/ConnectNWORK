@@ -20,12 +20,12 @@ class _PaymentsSetupScreenState extends State<PaymentsSetupScreen> {
 
   @override
   void initState() {
-    if (myProfile!.user!.interac != null) {
-      _interacController.text = myProfile!.user!.interac!;
+    if (myProfile!.interac != null) {
+      _interacController.text = myProfile!.interac!;
     }
 
-    if (myProfile!.user!.ssn != null) {
-      _socialSecurityController.text = myProfile!.user!.ssn!;
+    if (myProfile!.ssn != null) {
+      _socialSecurityController.text = myProfile!.ssn!;
     }
 
     super.initState();
@@ -229,6 +229,8 @@ class _PaymentsSetupScreenState extends State<PaymentsSetupScreen> {
                                   interac: _interacController.text,
                                   ssn: _socialSecurityController.text,
                                 );
+
+                                myProfile = await UserRepository.get();
 
                                 setState(() {
                                   sent = !sent;

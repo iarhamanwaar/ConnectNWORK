@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:connectnwork/constants.dart';
+import 'package:connectnwork/providers/apple_sign_in.dart';
 import 'package:connectnwork/providers/facebook_sign_in.dart';
 import 'package:connectnwork/providers/google_sign_in.dart';
 import 'package:connectnwork/utils.dart';
@@ -31,6 +34,7 @@ class _SignInScreenState extends State<SignInScreen> {
   Widget build(BuildContext context) {
     return ScaffoldGradient(
       child: Scaffold(
+        resizeToAvoidBottomInset: true,
         backgroundColor: Colors.transparent,
         body: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
@@ -53,8 +57,9 @@ class _SignInScreenState extends State<SignInScreen> {
                             ),
                             Positioned(
                               top: 30,
-                              child: SvgPicture.asset(
-                                'assets/logo.svg',
+                              child: Image.asset(
+                                'assets/logo.png',
+                                width: 238,
                               ),
                             ),
                             Positioned(
@@ -82,7 +87,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             ),
                             child: IconButton(
                               onPressed: () async {
-                                await FacebookSign.facebookLogin(context);
+                                await FacebookSign.login();
                               },
                               color: Colors.white,
                               icon: const Icon(
@@ -101,8 +106,8 @@ class _SignInScreenState extends State<SignInScreen> {
                               shape: BoxShape.circle,
                             ),
                             child: IconButton(
-                              onPressed: () {
-                                // todo: apple sign in
+                              onPressed: () async {
+                                await AppleSign.login();
                               },
                               color: Colors.white,
                               icon: const Icon(
@@ -122,7 +127,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             ),
                             child: IconButton(
                               onPressed: () async {
-                                await GoogleSign.googleLogin(context);
+                                await GoogleSign.login();
                               },
                               color: Colors.white,
                               icon: const Icon(
@@ -390,7 +395,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     ],
                   ),
                   const SizedBox(
-                    height: 150,
+                    height: 30,
                   ),
                   RichText(
                     text: TextSpan(
@@ -412,6 +417,9 @@ class _SignInScreenState extends State<SignInScreen> {
                         ),
                       ],
                     ),
+                  ),
+                  const SizedBox(
+                    height: 32,
                   ),
                 ],
               ),

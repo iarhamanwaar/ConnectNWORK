@@ -1,3 +1,4 @@
+import 'package:connectnwork/models/earnings_model.dart';
 import 'package:connectnwork/models/employee_job_model.dart';
 import 'package:connectnwork/repos/jobs_repository.dart';
 import 'package:connectnwork/widgets/app_bar.dart';
@@ -9,10 +10,12 @@ import 'package:intl/intl.dart';
 
 class WeeklyDetailsScreen extends StatefulWidget {
   final DateTime weekStart;
+  final DateTime weekEnd;
 
   const WeeklyDetailsScreen({
     Key? key,
     required this.weekStart,
+    required this.weekEnd,
   }) : super(key: key);
 
   @override
@@ -29,32 +32,17 @@ class _WeeklyDetailsScreenState extends State<WeeklyDetailsScreen> {
           title: 'Transfer Detail',
           drawer: false,
         ),
-        body: FutureBuilder<List<EmployeeJob>?>(
-            future: JobsRepository.get(status: 'paid'),
+        body: FutureBuilder<List<Earnings>?>(
+            future: JobsRepository.getEarnings(
+              startDate: widget.weekStart.toString(),
+              endDate: widget.weekEnd.toString(),
+            ),
             builder: (context, snapshot) {
               final data = snapshot.data;
 
               if (data != null) {
-                DateTime sunday = mostRecentSunday(DateTime.now());
+                DateTime sunday = mostRecentSunday(widget.weekStart);
                 DateTime saturday = sunday.add(const Duration(days: 6));
-                List<EmployeeJob> thisWeekJobs = [];
-                double totalEarnings = 0.0;
-
-                for (int i = 0; i < data.length; i++) {
-                  for (int j = 0; j < data[i].earnings!.length; j++) {
-                    if (data[i].earnings![j].period!.start!.toLocal().isAfter(sunday) && data[i].earnings![j].period!.start!.toLocal().isBefore(saturday)) {
-                      thisWeekJobs.add(data[i]);
-                    }
-                  }
-                }
-
-                for (int i = 0; i < thisWeekJobs.length; i++) {
-                  for (int j = 0; j < thisWeekJobs[i].earnings!.length; j++) {
-                    if (thisWeekJobs[i].earnings![j].period!.start!.toLocal().isAfter(sunday) && thisWeekJobs[i].earnings![j].period!.start!.toLocal().isBefore(saturday)) {
-                      totalEarnings = thisWeekJobs[i].earnings![j].earning!;
-                    }
-                  }
-                }
 
                 return Column(
                   children: [
@@ -70,14 +58,14 @@ class _WeeklyDetailsScreenState extends State<WeeklyDetailsScreen> {
                             style: GoogleFonts.montserrat(
                               fontWeight: FontWeight.w600,
                               fontSize: 12,
-                              letterSpacing: 1.5,
+                              letterSpacing: 2,
                             ),
                           ),
                           const SizedBox(
                             height: 16,
                           ),
                           Text(
-                            '\$$totalEarnings',
+                            '\$${data[0].total}',
                             style: GoogleFonts.montserrat(
                               fontWeight: FontWeight.w600,
                               fontSize: 20,
@@ -88,8 +76,9 @@ class _WeeklyDetailsScreenState extends State<WeeklyDetailsScreen> {
                             height: 19,
                           ),
                           ListView.builder(
+                            physics: const NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
-                            itemCount: thisWeekJobs.length,
+                            itemCount: data[0].jobs!.length,
                             itemBuilder: (context, index) {
                               return Column(
                                 children: [
@@ -97,14 +86,175 @@ class _WeeklyDetailsScreenState extends State<WeeklyDetailsScreen> {
                                     height: 20,
                                   ),
                                   EarningCard(
-                                    title: thisWeekJobs[index].job!.title!,
-                                    vendor: thisWeekJobs[index].job!.employer!.name!,
-                                    bill: thisWeekJobs[index].earnings![0].total!.toDouble(),
-                                    shiftId: thisWeekJobs[index].job!.id!,
+                                    title: data[0].jobs![index].job!.title!,
+                                    vendor: data[0].jobs![index].job!.employer!.name!,
+                                    bill: data[0].jobs![index].job!.shift!.ratePerHr! * data[0].jobs![index].job!.shift!.paidHrs!,
+                                    shiftId: data[0].jobs![index].job!.shift!.id!,
                                   ),
                                 ],
                               );
                             },
+                          ),
+                          Container(
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(20),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: const Color(0xFF000000).withOpacity(0.05),
+                                  blurRadius: 30,
+                                  offset: const Offset(0, 20),
+                                ),
+                              ],
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 18.0,
+                              vertical: 20,
+                            ),
+                            child: Column(
+                              children: [
+                                Text(
+                                  'Deductions Quebec',
+                                  style: GoogleFonts.montserrat(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                    letterSpacing: 2,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      'Annuity',
+                                      style: GoogleFonts.montserrat(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600,
+                                        letterSpacing: 2,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    Text(
+                                      '${data[0].deductions!.annuity!}',
+                                      style: GoogleFonts.montserrat(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600,
+                                        letterSpacing: 2,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(
+                                  height: 8,
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      'Insurance',
+                                      style: GoogleFonts.montserrat(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600,
+                                        letterSpacing: 2,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    Text(
+                                      '${data[0].deductions!.insurance!}',
+                                      style: GoogleFonts.montserrat(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600,
+                                        letterSpacing: 2,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(
+                                  height: 8,
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      'RQAP',
+                                      style: GoogleFonts.montserrat(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600,
+                                        letterSpacing: 2,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    Text(
+                                      '${data[0].deductions!.rqap!}',
+                                      style: GoogleFonts.montserrat(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600,
+                                        letterSpacing: 2,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(
+                                  height: 8,
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      'QC Tax',
+                                      style: GoogleFonts.montserrat(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600,
+                                        letterSpacing: 2,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    Text(
+                                      '${data[0].deductions!.qcTax!}',
+                                      style: GoogleFonts.montserrat(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600,
+                                        letterSpacing: 2,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(
+                                  height: 8,
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      'Federal Tax',
+                                      style: GoogleFonts.montserrat(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600,
+                                        letterSpacing: 2,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    Text(
+                                      '${data[0].deductions!.fedTax!}',
+                                      style: GoogleFonts.montserrat(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600,
+                                        letterSpacing: 2,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),

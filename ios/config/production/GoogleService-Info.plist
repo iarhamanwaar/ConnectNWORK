@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>8401053360-4hevr7v8bvh1mvqntcrc3i8idgl4mvj4.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.8401053360-4hevr7v8bvh1mvqntcrc3i8idgl4mvj4</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>8401053360-tjlgof5d3d3erv3mr0mpc8i8t205rkvr.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCX9Ddj2ckHqobDUFMfTGpOgmYTaI-ISCg</string>
+	<key>GCM_SENDER_ID</key>
+	<string>8401053360</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.connectnwork.app</string>
+	<key>PROJECT_ID</key>
+	<string>cnw-auth</string>
+	<key>STORAGE_BUCKET</key>
+	<string>cnw-auth.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:8401053360:ios:7827f625b8cf0a28e77d75</string>
+</dict>
+</plist>

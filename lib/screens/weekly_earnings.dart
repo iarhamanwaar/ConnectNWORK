@@ -1,3 +1,4 @@
+import 'package:connectnwork/models/earnings_model.dart';
 import 'package:connectnwork/models/employee_job_model.dart';
 import 'package:connectnwork/repos/jobs_repository.dart';
 import 'package:connectnwork/screens/weekly_details.dart';
@@ -25,8 +26,8 @@ class _WeeklyEarningsScreenState extends State<WeeklyEarningsScreen> {
           drawer: false,
         ),
         body: SafeArea(
-          child: FutureBuilder<List<EmployeeJob>?>(
-            future: JobsRepository.get(status: 'paid'),
+          child: FutureBuilder<List<Earnings>?>(
+            future: JobsRepository.getEarnings(),
             builder: (context, snapshot) {
               final data = snapshot.data;
 
@@ -86,7 +87,8 @@ class _WeeklyEarningsScreenState extends State<WeeklyEarningsScreen> {
                                             MaterialPageRoute(
                                               builder: (context) {
                                                 return WeeklyDetailsScreen(
-                                                  weekStart: data[index].earnings![0].period!.start!,
+                                                  weekStart: data[index].period!.start!,
+                                                  weekEnd: data[index].period!.end!,
                                                 );
                                               },
                                             ),
@@ -103,7 +105,7 @@ class _WeeklyEarningsScreenState extends State<WeeklyEarningsScreen> {
                                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: [
                                               Text(
-                                                DateFormat.MMMd().format(data[index].earnings![0].period!.start!),
+                                                DateFormat.MMMd().format(data[index].period!.start!),
                                                 style: GoogleFonts.montserrat(
                                                   fontSize: 12,
                                                   fontWeight: FontWeight.w600,
@@ -112,7 +114,7 @@ class _WeeklyEarningsScreenState extends State<WeeklyEarningsScreen> {
                                                 ),
                                               ),
                                               Text(
-                                                '\$${data[index].earnings![0].total}',
+                                                '\$${data[index].total}',
                                                 style: GoogleFonts.montserrat(
                                                   fontSize: 14,
                                                   fontWeight: FontWeight.w600,

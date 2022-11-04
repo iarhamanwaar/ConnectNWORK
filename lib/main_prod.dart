@@ -1,6 +1,6 @@
 import 'package:connectnwork/environment.dart';
-import 'package:connectnwork/main_common.dart';
+import 'package:connectnwork/app.dart';
 
 Future<void> main() async {
-  await mainCommon(Environment.prod);
+  await app(flavor: Environment.prod);
 }

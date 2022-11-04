@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class GoogleSign {
-  static Future googleLogin(BuildContext context) async {
+  static Future login() async {
     showDialog(
-      context: context,
+      context: navigatorKey.currentContext!,
       barrierDismissible: false,
       builder: (context) {
         return const Center(
@@ -18,16 +18,16 @@ class GoogleSign {
 
     try {
       final googleUser = await GoogleSignIn().signIn();
-      if (googleUser == null) return;
+      if (googleUser != null) {
+        final googleAuth = await googleUser.authentication;
 
-      final googleAuth = await googleUser.authentication;
+        final credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth.accessToken,
+          idToken: googleAuth.idToken,
+        );
 
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-
-      await FirebaseAuth.instance.signInWithCredential(credential);
+        await FirebaseAuth.instance.signInWithCredential(credential);
+      }
     } on FirebaseException catch (e) {
       Utils.showSnackbar(e.message);
     }

@@ -33,9 +33,6 @@ apply plugin: 'com.google.gms.google-services'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
-    compileSdkVersion flutter.compileSdkVersion
-    ndkVersion flutter.ndkVersion
-
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -50,9 +47,9 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.connectnwork.dev.app"
+        applicationId "com.connectnwork.app"
         minSdkVersion 21
-        compileSdkVersion flutter.compileSdkVersion
+        compileSdkVersion 33
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
@@ -77,6 +74,27 @@ android {
     buildTypes {
         release {
             signingConfig signingConfigs.release
+        }
+    }
+
+    flavorDimensions "default"
+    productFlavors {
+        production {
+            dimension "default"
+            resValue "string", "app_name", "Connect&Work"
+            resValue "string", "facebook_app_id", "1325235681553071"
+            resValue "string", "fb_login_protocol_scheme", "fb1325235681553071"
+            resValue "string", "facebook_client_token", "dceb620a8f112d1cde90af5a369abb2d"
+            applicationIdSuffix ""
+        }
+
+        staging {
+            dimension "default"
+            resValue "string", "app_name", "STG Connect&Work"
+            resValue "string", "facebook_app_id", "1334992550632851"
+            resValue "string", "fb_login_protocol_scheme", "fb1334992550632851"
+            resValue "string", "facebook_client_token", "ad58f9b105b1c552a48a14e5831f8088"
+            applicationIdSuffix ".stg"
         }
     }
 }
