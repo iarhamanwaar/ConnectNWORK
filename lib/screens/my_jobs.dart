@@ -1,7 +1,13 @@
+import 'package:connectnwork/constants.dart';
+import 'package:connectnwork/models/employee_job_model.dart';
+import 'package:connectnwork/repos/jobs_repository.dart';
+import 'package:connectnwork/screens/cancelled_job.dart';
+import 'package:connectnwork/screens/pending_job.dart';
 import 'package:connectnwork/widgets/app_bar.dart';
 import 'package:connectnwork/widgets/drawer.dart';
 import 'package:connectnwork/widgets/jobs_toggle_button.dart';
 import 'package:connectnwork/widgets/scaffold_gradient.dart';
+import 'package:connectnwork/widgets/schedule_job_card.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -14,6 +20,33 @@ class MyJobs extends StatefulWidget {
 
 class _MyJobsState extends State<MyJobs> {
   int kStackIndex = 0;
+  List<EmployeeJob>? completed;
+  List<EmployeeJob>? pending;
+  List<EmployeeJob>? cancelled;
+
+  onGoBack() async {
+    showDialog(
+      context: navigatorKey.currentContext!,
+      barrierDismissible: false,
+      builder: (context) {
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
+
+    List<EmployeeJob>? tempCompleted = await JobsRepository.get(status: 'completed');
+    List<EmployeeJob>? tempPending = await JobsRepository.get(status: 'pending');
+    List<EmployeeJob>? tempCancelled = await JobsRepository.get(status: 'cancelled');
+
+    setState(() {
+      completed = tempCompleted;
+      pending = tempPending;
+      cancelled = tempCancelled;
+    });
+
+    navigatorKey.currentState!.pop();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,77 +58,108 @@ class _MyJobsState extends State<MyJobs> {
           title: 'My Jobs',
           drawer: true,
         ),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 20.0,
-          ),
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 35,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          kStackIndex = 0;
-                        });
-                      },
-                      child: JobsToggleButton(
-                        text: 'Timesheets',
-                        active: kStackIndex == 0,
+        body: FutureBuilder(
+          future: Future.wait([
+            JobsRepository.get(status: 'completed'),
+            JobsRepository.get(status: 'pending'),
+            JobsRepository.get(status: 'cancelled'),
+          ]),
+          builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
+            if (snapshot.data != null) {
+              completed = snapshot.data![0];
+              pending = snapshot.data![1];
+              cancelled = snapshot.data![1];
+
+              return Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20.0,
+                ),
+                child: Column(
+                  children: [
+                    const SizedBox(
+                      height: 35,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                kStackIndex = 0;
+                              });
+                            },
+                            child: JobsToggleButton(
+                              text: 'Timesheets',
+                              active: kStackIndex == 0,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 20,
+                        ),
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                kStackIndex = 1;
+                              });
+                            },
+                            child: JobsToggleButton(
+                              text: 'Pending',
+                              active: kStackIndex == 1,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 20,
+                        ),
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                kStackIndex = 2;
+                              });
+                            },
+                            child: JobsToggleButton(
+                              text: 'Cancelled',
+                              active: kStackIndex == 2,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 60,
+                    ),
+                    Expanded(
+                      child: IndexedStack(
+                        index: kStackIndex,
+                        children: [
+                          Timesheets(
+                            completed: completed,
+                            onGoBack: onGoBack,
+                          ),
+                          Pending(
+                            pending: pending,
+                            onGoBack: onGoBack,
+                          ),
+                          Cancelled(
+                            cancelled: cancelled,
+                            onGoBack: onGoBack,
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-                  const SizedBox(
-                    width: 20,
-                  ),
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          kStackIndex = 1;
-                        });
-                      },
-                      child: JobsToggleButton(
-                        text: 'Pending',
-                        active: kStackIndex == 1,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 20,
-                  ),
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          kStackIndex = 2;
-                        });
-                      },
-                      child: JobsToggleButton(
-                        text: 'Cancelled',
-                        active: kStackIndex == 2,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Expanded(
-                child: IndexedStack(
-                  index: kStackIndex,
-                  children: const [
-                    Timesheets(),
-                    Pending(),
-                    Cancelled(),
                   ],
                 ),
-              ),
-            ],
-          ),
+              );
+            } else {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          },
         ),
       ),
     );
@@ -103,238 +167,223 @@ class _MyJobsState extends State<MyJobs> {
 }
 
 class Timesheets extends StatelessWidget {
-  const Timesheets({Key? key}) : super(key: key);
+  final List<EmployeeJob>? completed;
+  final Function() onGoBack;
+
+  const Timesheets({
+    Key? key,
+    required this.completed,
+    required this.onGoBack,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      builder: (context, snapshot) {
-        final data = snapshot.data;
-
-        if (data != null) {
+    if (completed != null) {
+      return ListView.builder(
+        physics: const BouncingScrollPhysics(),
+        shrinkWrap: true,
+        itemCount: completed!.length,
+        itemBuilder: (context, index) {
           return Column(
-            children: const [
-              SizedBox(
-                height: 62,
+            children: [
+              ScheduleJobCard(
+                job: completed![index],
+                onPress: () {},
+                completed: true,
+                dateWithTime: true,
               ),
-              // JobCard(
-              //   title: 'Aide Boulanger',
-              //   rate: 18.75,
-              //   vendor: 'Bridor Boucherville',
-              //   time: 'Sep 4, 2021 19:00 - 23:30',
-              //   location: '4455 Rue cote Marquette H2G 1R2, Laval, QC',
-              //   logo: 'assets/bridor_logo.png',
-              //   completed: true,
-              // ),
-              SizedBox(
-                height: 25,
+              const SizedBox(
+                height: 20,
               ),
-              // JobCard(
-              //   title: 'Valet',
-              //   rate: 15.55,
-              //   vendor: 'Best Western Montreal Downtown',
-              //   time: 'Sep 5, 2021 08:00 - 15:30',
-              //   location: '4455 Rue cote Marquette H2G 1R2, Laval, QC',
-              //   logo: 'assets/best_western_logo.png',
-              //   completed: true,
-              // ),
             ],
           );
-        } else if (data == null) {
-          return Center(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 58.0,
+        },
+      );
+    } else {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 58.0,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Image.asset(
+                'assets/no_timesheet.png',
               ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Image.asset(
-                    'assets/no_timesheet.png',
-                  ),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  Text(
-                    'You haven’t complete a shift yet.',
-                    style: GoogleFonts.montserrat(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 18,
-                      color: Colors.black,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(
-                    height: 100,
-                  ),
-                ],
+              const SizedBox(
+                height: 30,
               ),
-            ),
-          );
-        } else {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-      },
-    );
+              Text(
+                'You haven’t complete a shift yet.',
+                style: GoogleFonts.montserrat(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 18,
+                  color: Colors.black,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(
+                height: 100,
+              ),
+            ],
+          ),
+        ),
+      );
+    }
   }
 }
 
 class Pending extends StatelessWidget {
-  const Pending({Key? key}) : super(key: key);
+  final List<EmployeeJob>? pending;
+  final Function() onGoBack;
+
+  const Pending({
+    Key? key,
+    required this.pending,
+    required this.onGoBack,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      builder: (context, snapshot) {
-        final data = snapshot.data;
-
-        if (data != null) {
+    if (pending != null) {
+      return ListView.builder(
+        physics: const BouncingScrollPhysics(),
+        shrinkWrap: true,
+        itemCount: pending!.length,
+        itemBuilder: (context, index) {
           return Column(
-            children: const [
-              SizedBox(
-                height: 62,
+            children: [
+              ScheduleJobCard(
+                job: pending![index],
+                onPress: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => PendingJobScreen(
+                        job: pending![index],
+                      ),
+                    ),
+                  ).then((value) => onGoBack());
+                },
+                pending: true,
+                dateWithTime: true,
               ),
-              // JobCard(
-              //   title: 'Aide Boulanger',
-              //   rate: 18.75,
-              //   vendor: 'Bridor Boucherville',
-              //   time: 'Sep 4, 2021 19:00 - 23:30',
-              //   location: '4455 Rue cote Marquette H2G 1R2, Laval, QC',
-              //   logo: 'assets/bridor_logo.png',
-              //   pending: true,
-              // ),
-              SizedBox(
-                height: 25,
+              const SizedBox(
+                height: 20,
               ),
-              // JobCard(
-              //   title: 'Valet',
-              //   rate: 15.55,
-              //   vendor: 'Best Western Montreal Downtown',
-              //   time: 'Sep 5, 2021 08:00 - 15:30',
-              //   location: '4455 Rue cote Marquette H2G 1R2, Laval, QC',
-              //   logo: 'assets/best_western_logo.png',
-              //   pending: true,
-              // ),
             ],
           );
-        } else if (data == null) {
-          return Center(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 58.0,
+        },
+      );
+    } else {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 58.0,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Image.asset(
+                'assets/no_pending.png',
               ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Image.asset(
-                    'assets/no_pending.png',
-                  ),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  Text(
-                    'No pending shifts',
-                    style: GoogleFonts.montserrat(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 18,
-                      color: Colors.black,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(
-                    height: 100,
-                  ),
-                ],
+              const SizedBox(
+                height: 30,
               ),
-            ),
-          );
-        } else {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-      },
-    );
+              Text(
+                'No pending shifts',
+                style: GoogleFonts.montserrat(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 18,
+                  color: Colors.black,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(
+                height: 100,
+              ),
+            ],
+          ),
+        ),
+      );
+    }
   }
 }
 
 class Cancelled extends StatelessWidget {
-  const Cancelled({Key? key}) : super(key: key);
+  final List<EmployeeJob>? cancelled;
+  final Function() onGoBack;
+
+  const Cancelled({
+    Key? key,
+    required this.cancelled,
+    required this.onGoBack,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      builder: (context, snapshot) {
-        final data = snapshot.data;
-
-        if (data != null) {
+    if (cancelled != null) {
+      return ListView.builder(
+        physics: const BouncingScrollPhysics(),
+        shrinkWrap: true,
+        itemCount: cancelled!.length,
+        itemBuilder: (context, index) {
           return Column(
-            children: const [
-              SizedBox(
-                height: 62,
+            children: [
+              ScheduleJobCard(
+                job: cancelled![index],
+                onPress: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CancelledJobScreen(
+                        job: cancelled![index],
+                      ),
+                    ),
+                  ).then((value) => onGoBack());
+                },
+                cancelled: true,
+                dateWithTime: true,
               ),
-              // JobCard(
-              //   title: 'Aide Boulanger',
-              //   rate: 18.75,
-              //   vendor: 'Bridor Boucherville',
-              //   time: 'Sep 4, 2021 19:00 - 23:30',
-              //   location: '4455 Rue cote Marquette H2G 1R2, Laval, QC',
-              //   logo: 'assets/bridor_logo.png',
-              //   cancelled: true,
-              // ),
-              SizedBox(
-                height: 25,
+              const SizedBox(
+                height: 20,
               ),
-              // JobCard(
-              //   title: 'Valet',
-              //   rate: 15.55,
-              //   vendor: 'Best Western Montreal Downtown',
-              //   time: 'Sep 5, 2021 08:00 - 15:30',
-              //   location: '4455 Rue cote Marquette H2G 1R2, Laval, QC',
-              //   logo: 'assets/best_western_logo.png',
-              //   cancelledByEmployer: true,
-              // ),
             ],
           );
-        } else if (data == null) {
-          return Center(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 58.0,
+        },
+      );
+    } else {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 58.0,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Image.asset(
+                'assets/no_pending.png',
               ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Image.asset(
-                    'assets/no_cancelled.png',
-                  ),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  Text(
-                    'No cancelled shifts',
-                    style: GoogleFonts.montserrat(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 18,
-                      color: Colors.black,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(
-                    height: 100,
-                  ),
-                ],
+              const SizedBox(
+                height: 30,
               ),
-            ),
-          );
-        } else {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-      },
-    );
+              Text(
+                'No pending shifts',
+                style: GoogleFonts.montserrat(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 18,
+                  color: Colors.black,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(
+                height: 100,
+              ),
+            ],
+          ),
+        ),
+      );
+    }
   }
 }

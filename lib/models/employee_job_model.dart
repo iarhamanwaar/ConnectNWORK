@@ -2,6 +2,8 @@
 //
 //     final employeeJob = employeeJobFromJson(jsonString);
 
+// ignore_for_file: prefer_if_null_operators
+
 import 'dart:convert';
 
 List<EmployeeJob> employeeJobFromJson(String str) => List<EmployeeJob>.from(json.decode(str).map((x) => EmployeeJob.fromJson(x)));
@@ -10,292 +12,204 @@ String employeeJobToJson(List<EmployeeJob> data) => json.encode(List<dynamic>.fr
 
 class EmployeeJob {
   EmployeeJob({
-    required this.id,
-    required this.job,
-    required this.status,
-    required this.cancelReason,
-    required this.earnings,
+    this.id,
+    this.job,
+    this.status,
+    this.cancelReason,
   });
 
-  final String? id;
-  final Job? job;
-  final String? status;
-  final dynamic cancelReason;
-  final List<Earning>? earnings;
+  String? id;
+  Job? job;
+  String? status;
+  dynamic cancelReason;
 
   factory EmployeeJob.fromJson(Map<String, dynamic> json) => EmployeeJob(
-        id: json["_id"],
-        job: Job.fromJson(json["job"]),
-        status: json["status"],
+        id: json["_id"] == null ? null : json["_id"],
+        job: json["job"] == null ? null : Job.fromJson(json["job"]),
+        status: json["status"] == null ? null : json["status"],
         cancelReason: json["cancelReason"],
-        earnings: List<Earning>.from(json["earnings"].map((x) => Earning.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
-        "_id": id,
+        "_id": id == null ? null : id,
         "job": job == null ? null : job!.toJson(),
-        "status": status,
+        "status": status == null ? null : status,
         "cancelReason": cancelReason,
-        "earnings": List<dynamic>.from(earnings!.map((x) => x.toJson())),
-      };
-}
-
-class Earning {
-  Earning({
-    required this.deductions,
-    required this.period,
-    required this.hours,
-    required this.total,
-    required this.deductionTotal,
-    required this.earning,
-  });
-
-  final Deductions? deductions;
-  final Period? period;
-  final int? hours;
-  final int? total;
-  final double? deductionTotal;
-  final double? earning;
-
-  factory Earning.fromJson(Map<String, dynamic> json) => Earning(
-        deductions: Deductions.fromJson(json["deductions"]),
-        period: Period.fromJson(json["period"]),
-        hours: json["hours"],
-        total: json["total"],
-        deductionTotal: json["deductionTotal"].toDouble(),
-        earning: json["earning"].toDouble(),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "deductions": deductions == null ? null : deductions!.toJson(),
-        "period": period == null ? null : period!.toJson(),
-        "hours": hours,
-        "total": total,
-        "deductionTotal": deductionTotal,
-        "earning": earning,
-      };
-}
-
-class Deductions {
-  Deductions({
-    required this.annuity,
-    required this.fedTax,
-    required this.insurance,
-    required this.qcTax,
-    required this.rqap,
-  });
-
-  final double? annuity;
-  final double? fedTax;
-  final int? insurance;
-  final double? qcTax;
-  final double? rqap;
-
-  factory Deductions.fromJson(Map<String, dynamic> json) => Deductions(
-        annuity: json["annuity"].toDouble(),
-        fedTax: json["fedTax"].toDouble(),
-        insurance: json["insurance"],
-        qcTax: json["qcTax"].toDouble(),
-        rqap: json["rqap"].toDouble(),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "annuity": annuity,
-        "fedTax": fedTax,
-        "insurance": insurance,
-        "qcTax": qcTax,
-        "rqap": rqap,
-      };
-}
-
-class Period {
-  Period({
-    required this.start,
-    required this.end,
-  });
-
-  final DateTime? start;
-  final DateTime? end;
-
-  factory Period.fromJson(Map<String, dynamic> json) => Period(
-        start: DateTime.parse(json["start"]),
-        end: DateTime.parse(json["end"]),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "start": start == null ? null : start!.toIso8601String(),
-        "end": end == null ? null : end!.toIso8601String(),
       };
 }
 
 class Job {
   Job({
-    required this.id,
-    required this.employer,
-    required this.category,
-    required this.sanityCategoryId,
-    required this.title,
-    required this.sanityTitleId,
-    required this.location,
-    required this.description,
+    this.id,
+    this.employer,
+    this.category,
+    this.sanityCategoryId,
+    this.title,
+    this.sanityTitleId,
+    this.location,
+    this.description,
+    this.shift,
   });
 
-  final String? id;
-  final Employer? employer;
-  final String? category;
-  final String? sanityCategoryId;
-  final String? title;
-  final String? sanityTitleId;
-  final JobLocation? location;
-  final String? description;
+  String? id;
+  Employer? employer;
+  String? category;
+  String? sanityCategoryId;
+  String? title;
+  String? sanityTitleId;
+  JobLocation? location;
+  String? description;
+  Shift? shift;
 
   factory Job.fromJson(Map<String, dynamic> json) => Job(
-        id: json["_id"],
-        employer: Employer.fromJson(json["employer"]),
-        category: json["category"],
-        sanityCategoryId: json["sanityCategoryId"],
-        title: json["title"],
-        sanityTitleId: json["sanityTitleId"],
-        location: JobLocation.fromJson(json["location"]),
-        description: json["description"],
+        id: json["_id"] == null ? null : json["_id"],
+        employer: json["employer"] == null ? null : Employer.fromJson(json["employer"]),
+        category: json["category"] == null ? null : json["category"],
+        sanityCategoryId: json["sanityCategoryId"] == null ? null : json["sanityCategoryId"],
+        title: json["title"] == null ? null : json["title"],
+        sanityTitleId: json["sanityTitleId"] == null ? null : json["sanityTitleId"],
+        location: json["location"] == null ? null : JobLocation.fromJson(json["location"]),
+        description: json["description"] == null ? null : json["description"],
+        shift: json["shift"] == null ? null : Shift.fromJson(json["shift"]),
       );
 
   Map<String, dynamic> toJson() => {
-        "_id": id,
+        "_id": id == null ? null : id,
         "employer": employer == null ? null : employer!.toJson(),
-        "category": category,
-        "sanityCategoryId": sanityCategoryId,
-        "title": title,
-        "sanityTitleId": sanityTitleId,
+        "category": category == null ? null : category,
+        "sanityCategoryId": sanityCategoryId == null ? null : sanityCategoryId,
+        "title": title == null ? null : title,
+        "sanityTitleId": sanityTitleId == null ? null : sanityTitleId,
         "location": location == null ? null : location!.toJson(),
-        "description": description,
+        "description": description == null ? null : description,
+        "shift": shift == null ? null : shift!.toJson(),
       };
 }
 
 class Employer {
   Employer({
-    required this.id,
-    required this.name,
-    required this.logo,
+    this.id,
+    this.name,
+    this.logo,
   });
 
-  final String? id;
-  final String? name;
-  final String? logo;
+  String? id;
+  String? name;
+  String? logo;
 
   factory Employer.fromJson(Map<String, dynamic> json) => Employer(
-        id: json["_id"],
-        name: json["name"],
-        logo: json["logo"],
+        id: json["_id"] == null ? null : json["_id"],
+        name: json["name"] == null ? null : json["name"],
+        logo: json["logo"] == null ? null : json["logo"],
       );
 
   Map<String, dynamic> toJson() => {
-        "_id": id,
-        "name": name,
-        "logo": logo,
+        "_id": id == null ? null : id,
+        "name": name == null ? null : name,
+        "logo": logo == null ? null : logo,
       };
 }
 
 class JobLocation {
   JobLocation({
-    required this.geoLocation,
-    required this.apt,
-    required this.streetNumber,
-    required this.addressLine1,
-    required this.addressLine2,
-    required this.city,
-    required this.postalCode,
-    required this.state,
-    required this.stateCode,
-    required this.country,
-    required this.countryCode,
-    required this.formattedAddress,
-    required this.formattedAddress2,
-    required this.geometry,
+    this.geoLocation,
+    this.apt,
+    this.streetNumber,
+    this.addressLine1,
+    this.addressLine2,
+    this.city,
+    this.postalCode,
+    this.state,
+    this.stateCode,
+    this.country,
+    this.countryCode,
+    this.formattedAddress,
+    this.formattedAddress2,
+    this.geometry,
   });
 
-  final GeoLocation? geoLocation;
-  final dynamic apt;
-  final String? streetNumber;
-  final String? addressLine1;
-  final String? addressLine2;
-  final String? city;
-  final String? postalCode;
-  final String? state;
-  final String? stateCode;
-  final String? country;
-  final String? countryCode;
-  final String? formattedAddress;
-  final String? formattedAddress2;
-  final Geometry? geometry;
+  GeoLocation? geoLocation;
+  dynamic apt;
+  String? streetNumber;
+  String? addressLine1;
+  String? addressLine2;
+  String? city;
+  String? postalCode;
+  String? state;
+  String? stateCode;
+  String? country;
+  String? countryCode;
+  String? formattedAddress;
+  String? formattedAddress2;
+  Geometry? geometry;
 
   factory JobLocation.fromJson(Map<String, dynamic> json) => JobLocation(
-        geoLocation: GeoLocation.fromJson(json["geoLocation"]),
+        geoLocation: json["geoLocation"] == null ? null : GeoLocation.fromJson(json["geoLocation"]),
         apt: json["apt"],
-        streetNumber: json["streetNumber"],
-        addressLine1: json["addressLine1"],
-        addressLine2: json["addressLine2"],
-        city: json["city"],
-        postalCode: json["postalCode"],
-        state: json["state"],
-        stateCode: json["stateCode"],
-        country: json["country"],
-        countryCode: json["countryCode"],
-        formattedAddress: json["formattedAddress"],
-        formattedAddress2: json["formattedAddress2"],
-        geometry: Geometry.fromJson(json["geometry"]),
+        streetNumber: json["streetNumber"] == null ? null : json["streetNumber"],
+        addressLine1: json["addressLine1"] == null ? null : json["addressLine1"],
+        addressLine2: json["addressLine2"] == null ? null : json["addressLine2"],
+        city: json["city"] == null ? null : json["city"],
+        postalCode: json["postalCode"] == null ? null : json["postalCode"],
+        state: json["state"] == null ? null : json["state"],
+        stateCode: json["stateCode"] == null ? null : json["stateCode"],
+        country: json["country"] == null ? null : json["country"],
+        countryCode: json["countryCode"] == null ? null : json["countryCode"],
+        formattedAddress: json["formattedAddress"] == null ? null : json["formattedAddress"],
+        formattedAddress2: json["formattedAddress2"] == null ? null : json["formattedAddress2"],
+        geometry: json["geometry"] == null ? null : Geometry.fromJson(json["geometry"]),
       );
 
   Map<String, dynamic> toJson() => {
         "geoLocation": geoLocation == null ? null : geoLocation!.toJson(),
         "apt": apt,
-        "streetNumber": streetNumber,
-        "addressLine1": addressLine1,
-        "addressLine2": addressLine2,
-        "city": city,
-        "postalCode": postalCode,
-        "state": state,
-        "stateCode": stateCode,
-        "country": country,
-        "countryCode": countryCode,
-        "formattedAddress": formattedAddress,
-        "formattedAddress2": formattedAddress2,
+        "streetNumber": streetNumber == null ? null : streetNumber,
+        "addressLine1": addressLine1 == null ? null : addressLine1,
+        "addressLine2": addressLine2 == null ? null : addressLine2,
+        "city": city == null ? null : city,
+        "postalCode": postalCode == null ? null : postalCode,
+        "state": state == null ? null : state,
+        "stateCode": stateCode == null ? null : stateCode,
+        "country": country == null ? null : country,
+        "countryCode": countryCode == null ? null : countryCode,
+        "formattedAddress": formattedAddress == null ? null : formattedAddress,
+        "formattedAddress2": formattedAddress2 == null ? null : formattedAddress2,
         "geometry": geometry == null ? null : geometry!.toJson(),
       };
 }
 
 class GeoLocation {
   GeoLocation({
-    required this.type,
-    required this.coordinates,
+    this.type,
+    this.coordinates,
   });
 
-  final String? type;
-  final List<double>? coordinates;
+  String? type;
+  List<double>? coordinates;
 
   factory GeoLocation.fromJson(Map<String, dynamic> json) => GeoLocation(
-        type: json["type"],
-        coordinates: List<double>.from(json["coordinates"].map((x) => x.toDouble())),
+        type: json["type"] == null ? null : json["type"],
+        coordinates: json["coordinates"] == null ? null : List<double>.from(json["coordinates"].map((x) => x.toDouble())),
       );
 
   Map<String, dynamic> toJson() => {
-        "type": type,
+        "type": type == null ? null : type,
         "coordinates": coordinates == null ? null : List<dynamic>.from(coordinates!.map((x) => x)),
       };
 }
 
 class Geometry {
   Geometry({
-    required this.location,
-    required this.viewport,
+    this.location,
+    this.viewport,
   });
 
-  final NortheastClass? location;
-  final Viewport? viewport;
+  NortheastClass? location;
+  Viewport? viewport;
 
   factory Geometry.fromJson(Map<String, dynamic> json) => Geometry(
-        location: NortheastClass.fromJson(json["location"]),
-        viewport: Viewport.fromJson(json["viewport"]),
+        location: json["location"] == null ? null : NortheastClass.fromJson(json["location"]),
+        viewport: json["viewport"] == null ? null : Viewport.fromJson(json["viewport"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -306,40 +220,88 @@ class Geometry {
 
 class NortheastClass {
   NortheastClass({
-    required this.lat,
-    required this.lng,
+    this.lat,
+    this.lng,
   });
 
-  final double? lat;
-  final double? lng;
+  double? lat;
+  double? lng;
 
   factory NortheastClass.fromJson(Map<String, dynamic> json) => NortheastClass(
-        lat: json["lat"].toDouble(),
-        lng: json["lng"].toDouble(),
+        lat: json["lat"] == null ? null : json["lat"]!.toDouble(),
+        lng: json["lng"] == null ? null : json["lng"]!.toDouble(),
       );
 
   Map<String, dynamic> toJson() => {
-        "lat": lat,
-        "lng": lng,
+        "lat": lat == null ? null : lat,
+        "lng": lng == null ? null : lng,
       };
 }
 
 class Viewport {
   Viewport({
-    required this.northeast,
-    required this.southwest,
+    this.northeast,
+    this.southwest,
   });
 
-  final NortheastClass? northeast;
-  final NortheastClass? southwest;
+  NortheastClass? northeast;
+  NortheastClass? southwest;
 
   factory Viewport.fromJson(Map<String, dynamic> json) => Viewport(
-        northeast: NortheastClass.fromJson(json["northeast"]),
-        southwest: NortheastClass.fromJson(json["southwest"]),
+        northeast: json["northeast"] == null ? null : NortheastClass.fromJson(json["northeast"]),
+        southwest: json["southwest"] == null ? null : NortheastClass.fromJson(json["southwest"]),
       );
 
   Map<String, dynamic> toJson() => {
         "northeast": northeast == null ? null : northeast!.toJson(),
         "southwest": southwest == null ? null : southwest!.toJson(),
+      };
+}
+
+class Shift {
+  Shift({
+    this.numberOfWorkers,
+    this.ratePerHr,
+    this.currency,
+    this.startTime,
+    this.endTime,
+    this.days,
+    this.paidHrs,
+    this.tip,
+    this.id,
+  });
+
+  int? numberOfWorkers;
+  double? ratePerHr;
+  String? currency;
+  DateTime? startTime;
+  DateTime? endTime;
+  List<DateTime>? days;
+  double? paidHrs;
+  bool? tip;
+  String? id;
+
+  factory Shift.fromJson(Map<String, dynamic> json) => Shift(
+        numberOfWorkers: json["numberOfWorkers"] == null ? null : json["numberOfWorkers"],
+        ratePerHr: json["ratePerHr"] == null ? null : json["ratePerHr"]!.toDouble(),
+        currency: json["currency"] == null ? null : json["currency"],
+        startTime: json["startTime"] == null ? null : DateTime.parse(json["startTime"]),
+        endTime: json["endTime"] == null ? null : DateTime.parse(json["endTime"]),
+        days: json["days"] == null ? null : List<DateTime>.from(json["days"].map((x) => DateTime.parse(x))),
+        paidHrs: json["paidHrs"] == null ? null : json["paidHrs"]!.toDouble(),
+        tip: json["tip"] == null ? null : json["tip"],
+        id: json["id"] == null ? null : json["id"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "numberOfWorkers": numberOfWorkers == null ? null : numberOfWorkers,
+        "ratePerHr": ratePerHr == null ? null : ratePerHr,
+        "currency": currency == null ? null : currency,
+        "startTime": startTime == null ? null : startTime!.toIso8601String(),
+        "endTime": endTime == null ? null : endTime!.toIso8601String(),
+        "days": days == null ? null : List<dynamic>.from(days!.map((x) => x.toIso8601String())),
+        "paidHrs": paidHrs == null ? null : paidHrs,
+        "tip": tip == null ? null : tip,
+        "id": id == null ? null : id,
       };
 }

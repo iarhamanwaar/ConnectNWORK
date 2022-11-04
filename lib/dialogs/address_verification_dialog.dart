@@ -6,6 +6,7 @@ import 'package:connectnwork/repos/user_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 Future<void> showAddressVerificationDialog() async {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -17,14 +18,14 @@ Future<void> showAddressVerificationDialog() async {
   IAddressSchema? selectedAddress;
   bool search = false;
 
-  if (myProfile!.user!.dob != null) {
-    dobController.text = myProfile!.user!.dob.toString();
+  if (myProfile!.dob != null) {
+    dobController.text = DateFormat.yMd().format(myProfile!.dob!);
   }
 
-  if (myProfile!.user!.address != null && myProfile!.user!.address!.formattedAddress != null) {
-    addressController.text = myProfile!.user!.address!.formattedAddress!;
-    if (myProfile!.user!.address!.apt != null) aptController.text = myProfile!.user!.address!.apt;
-    selectedAddress = myProfile!.user!.address;
+  if (myProfile!.address != null && myProfile!.address!.formattedAddress != null) {
+    addressController.text = myProfile!.address!.formattedAddress!;
+    if (myProfile!.address!.apt != null) aptController.text = myProfile!.address!.apt;
+    selectedAddress = myProfile!.address!.toIAddressSchema();
   }
 
   return showDialog(

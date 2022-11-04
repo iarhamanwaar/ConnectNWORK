@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Connect&amp;Work Dev</string>
+	<string>$(APP_DISPLAY_NAME)</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -29,19 +29,21 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.128353766221-j20ctiv9ho1bqpi4efutmhc8lpc81sdn</string>
-				<string>fb1325235681553071</string>
+				<string>$(FIREBASE_REVERSE_STRING)</string>
+				<string>fb$(FACEBOOK_APP_ID)</string>
 			</array>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>FacebookAppID</key>
-	<string>1325235681553071</string>
+	<string>$(FACEBOOK_APP_ID)</string>
 	<key>FacebookClientToken</key>
-	<string>dceb620a8f112d1cde90af5a369abb2d</string>
+	<string>$(FACEBOOK_CLIENT_TOKEN)</string>
 	<key>FacebookDisplayName</key>
-	<string>Connect&amp;WORK</string>
+	<string>$(FACEBOOK_DISPLAY_NAME)</string>
+	<key>LSApplicationCategoryType</key>
+	<string></string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>fbapi</string>
@@ -51,6 +53,8 @@
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>Connect&amp;WORK needs access to your camera to upload avatar or verify profile.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Connect&amp;WORK needs access to your microphone to display job description.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Connect&amp;WORK needs access to your gallery to upload avatar.</string>
 	<key>UIBackgroundModes</key>
