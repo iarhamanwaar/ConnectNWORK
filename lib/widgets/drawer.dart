@@ -38,24 +38,37 @@ class CustomDrawer extends StatelessWidget {
                     SizedBox(
                       height: 100,
                       width: 100,
-                      child: myProfile == null
+                      child: myProfile == null && myProfile!.picture != null
                           ? const CircleAvatar(
                               child: Icon(Icons.account_circle),
                             )
-                          : CachedNetworkImage(
-                              imageUrl: myProfile!.user!.picture!,
-                              placeholder: (context, url) => const CircularProgressIndicator(),
-                              errorWidget: (context, url, error) => const Icon(Icons.error),
+                          : Container(
+                              clipBehavior: Clip.antiAlias,
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                              ),
+                              child: CachedNetworkImage(
+                                imageUrl: myProfile!.picture!,
+                                fit: BoxFit.cover,
+                                placeholder: (context, url) => const CircularProgressIndicator(),
+                                errorWidget: (context, url, error) => const Icon(Icons.error),
+                              ),
                             ),
                     ),
                     const SizedBox(
                       height: 15,
                     ),
-                    Text(
-                      myProfile == null ? 'Loading' : myProfile!.user!.fullName!,
-                      style: GoogleFonts.montserrat(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 18,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                      ),
+                      child: Text(
+                        myProfile == null && myProfile!.fullName != null ? 'Loading' : myProfile!.fullName!,
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.montserrat(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 18,
+                        ),
                       ),
                     ),
                   ],

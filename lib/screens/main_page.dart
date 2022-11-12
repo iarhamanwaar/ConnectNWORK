@@ -1,5 +1,6 @@
 import 'package:connectnwork/constants.dart';
 import 'package:connectnwork/screens/auth_page.dart';
+import 'package:connectnwork/screens/check_profile_verified.dart';
 import 'package:connectnwork/screens/home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +27,7 @@ class MainPage extends StatelessWidget {
               ),
             );
           } else if (snapshot.hasData) {
-            return const HomeScreen();
+            return const CheckProfileVerified();
           } else {
             return const AuthPage();
           }

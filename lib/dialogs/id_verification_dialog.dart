@@ -1,8 +1,18 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:connectnwork/constants.dart';
+import 'package:connectnwork/repos/user_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+
+XFile? facePicture;
+XFile? frontOfID;
+XFile? backOfID;
+String? dropdownValue;
 
 Future<void> showIDVerificationDialog() async {
   int currentStep = 0;
@@ -60,12 +70,7 @@ class _Step1State extends State<Step1> {
     'Visa',
   ];
 
-  String? dropdownValue;
-
   final ImagePicker picker = ImagePicker();
-
-  XFile? frontOfID;
-  XFile? backOfID;
 
   @override
   Widget build(BuildContext context) {
@@ -353,8 +358,6 @@ class Step2 extends StatefulWidget {
 class _Step2State extends State<Step2> {
   final ImagePicker picker = ImagePicker();
 
-  XFile? facePicture;
-
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -433,8 +436,45 @@ class _Step2State extends State<Step2> {
               height: 90,
             ),
             ElevatedButton(
-              onPressed: () {
-                if (facePicture != null) {}
+              onPressed: () async {
+                if (facePicture != null) {
+                  showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (context) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    },
+                  );
+
+                  File fIDFile = File(frontOfID!.path);
+                  Uint8List fIDbytes = await fIDFile.readAsBytes();
+                  String fIDbase64string = base64.encode(fIDbytes);
+
+                  File bIDFile = File(backOfID!.path);
+                  Uint8List bIDbytes = await bIDFile.readAsBytes();
+                  String bIDbase64string = base64.encode(bIDbytes);
+
+                  File fPFile = File(facePicture!.path);
+                  Uint8List fPbytes = await fPFile.readAsBytes();
+                  String fPbase64string = base64.encode(fPbytes);
+
+                  print(fIDbase64string);
+                  print(bIDbase64string);
+                  print(fPbase64string);
+
+                  await UserRepository.verify(
+                    idFrontSideImgBase64: fIDbase64string,
+                    idBackSideImgBase64: bIDbase64string,
+                    faceImgBase64: fPbase64string,
+                    idType: dropdownValue,
+                    idCountryCode: myProfile!.address!.countryCode,
+                  );
+
+                  navigatorKey.currentState!.pop();
+                  navigatorKey.currentState!.pop();
+                }
               },
               style: ButtonStyle(
                 elevation: MaterialStateProperty.all(0),

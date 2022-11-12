@@ -117,17 +117,13 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                                     controller: _emailController,
                                     keyboardType: TextInputType.emailAddress,
                                     autocorrect: false,
-                                    autovalidateMode:
-                                        AutovalidateMode.onUserInteraction,
+                                    autovalidateMode: AutovalidateMode.onUserInteraction,
                                     validator: (value) {
-                                      String pattern =
-                                          r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]"
+                                      String pattern = r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]"
                                           r"{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]"
                                           r"{0,253}[a-zA-Z0-9])?)*$";
                                       RegExp regex = RegExp(pattern);
-                                      if (value == null ||
-                                          value.isEmpty ||
-                                          !regex.hasMatch(value)) {
+                                      if (value == null || value.isEmpty || !regex.hasMatch(value)) {
                                         return 'Enter a valid email address';
                                       } else {
                                         return null;
@@ -135,8 +131,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                                     },
                                     decoration: const InputDecoration(
                                       isDense: true,
-                                      contentPadding:
-                                          EdgeInsets.fromLTRB(0, 15, 0, 15),
+                                      contentPadding: EdgeInsets.fromLTRB(0, 15, 0, 15),
                                       hintText: 'Email',
                                       border: UnderlineInputBorder(
                                         borderSide: BorderSide(
@@ -173,8 +168,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                                             barrierDismissible: false,
                                             builder: (context) {
                                               return const Center(
-                                                child:
-                                                    CircularProgressIndicator(),
+                                                child: CircularProgressIndicator(),
                                               );
                                             },
                                           );
@@ -182,10 +176,8 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                                           bool errorFlag = false;
 
                                           try {
-                                            await FirebaseAuth.instance
-                                                .sendPasswordResetEmail(
-                                              email:
-                                                  _emailController.text.trim(),
+                                            await FirebaseAuth.instance.sendPasswordResetEmail(
+                                              email: _emailController.text.trim(),
                                             );
                                           } on FirebaseAuthException catch (e) {
                                             errorFlag = true;
@@ -199,62 +191,43 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                                               context: context,
                                               builder: (_) => AlertDialog(
                                                 shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(20),
+                                                  borderRadius: BorderRadius.circular(20),
                                                 ),
                                                 content: Padding(
-                                                  padding: const EdgeInsets
-                                                      .symmetric(
+                                                  padding: const EdgeInsets.symmetric(
                                                     horizontal: 47.0,
                                                     vertical: 16,
                                                   ),
                                                   child: Column(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
+                                                    mainAxisSize: MainAxisSize.min,
                                                     children: [
                                                       Text(
                                                         'We sent new password on your email',
-                                                        style: GoogleFonts
-                                                            .montserrat(
+                                                        style: GoogleFonts.montserrat(
                                                           fontSize: 16,
-                                                          fontWeight:
-                                                              FontWeight.w700,
+                                                          fontWeight: FontWeight.w700,
                                                           height: 1.5,
-                                                          color: const Color(
-                                                              0xFF009FE3),
+                                                          color: const Color(0xFF009FE3),
                                                         ),
-                                                        textAlign:
-                                                            TextAlign.center,
+                                                        textAlign: TextAlign.center,
                                                       ),
                                                       const SizedBox(
                                                         height: 25,
                                                       ),
                                                       OutlinedButton(
                                                         onPressed: () {
-                                                          navigatorKey
-                                                              .currentState!
-                                                              .popAndPushNamed(
-                                                                  'temp_password');
+                                                          navigatorKey.currentState!.popAndPushNamed('temp_password');
                                                         },
                                                         child: Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .symmetric(
-                                                                  vertical:
-                                                                      8.0),
+                                                          padding: const EdgeInsets.symmetric(vertical: 8.0),
                                                           child: Text(
                                                             'Close',
-                                                            style: GoogleFonts
-                                                                .montserrat(
+                                                            style: GoogleFonts.montserrat(
                                                               fontSize: 14,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              color:
-                                                                  kBluePrimary,
+                                                              fontWeight: FontWeight.w600,
+                                                              color: kBluePrimary,
                                                             ),
-                                                            textAlign: TextAlign
-                                                                .center,
+                                                            textAlign: TextAlign.center,
                                                           ),
                                                         ),
                                                       )
@@ -268,14 +241,12 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                                       },
                                       style: ButtonStyle(
                                         elevation: MaterialStateProperty.all(0),
-                                        backgroundColor:
-                                            MaterialStateProperty.all(
+                                        backgroundColor: MaterialStateProperty.all(
                                           const Color(0xFF009FE3),
                                         ),
                                         shape: MaterialStateProperty.all(
                                           RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
+                                            borderRadius: BorderRadius.circular(10),
                                           ),
                                         ),
                                         padding: MaterialStateProperty.all(
@@ -303,29 +274,36 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                       ),
                     ],
                   ),
-                  RichText(
-                    text: TextSpan(
-                      style: GoogleFonts.montserrat(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                        color: const Color(0xFF77838F),
-                      ),
-                      text: 'First time here? ',
-                      children: [
-                        TextSpan(
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () {
-                              Navigator.pop(context, true);
-                            },
-                          text: 'Sign Up',
+                  Column(
+                    children: [
+                      RichText(
+                        text: TextSpan(
                           style: GoogleFonts.montserrat(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: const Color(0xFF009FE3),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                            color: const Color(0xFF77838F),
                           ),
+                          text: 'First time here? ',
+                          children: [
+                            TextSpan(
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  Navigator.pop(context, true);
+                                },
+                              text: 'Sign Up',
+                              style: GoogleFonts.montserrat(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: const Color(0xFF009FE3),
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                      const SizedBox(
+                        height: 32,
+                      ),
+                    ],
                   ),
                 ],
               ),

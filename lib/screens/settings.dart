@@ -172,7 +172,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     ElevatedButton(
                       onPressed: () {
                         _launchInWebViewOrVC(
-                          Uri.parse('http://connectnwork.com/terms'),
+                          Uri.parse('https://connectnwork.com/job-seeker-terms'),
                         );
                       },
                       style: ButtonStyle(

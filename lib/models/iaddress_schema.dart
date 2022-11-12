@@ -36,7 +36,7 @@ class IAddressSchema {
   final String postalCode;
   final String country;
   final String countryCode;
-  final Geometry geometry;
+  final Geometry? geometry;
   String? apt;
 
   factory IAddressSchema.fromJson(Map<String, dynamic> json) => IAddressSchema(
@@ -51,7 +51,7 @@ class IAddressSchema {
         postalCode: json["postalCode"],
         country: json["country"],
         countryCode: json["countryCode"],
-        geometry: Geometry.fromJson(json["geometry"]),
+        geometry: json["geometry"] == null ? null : Geometry.fromJson(json["geometry"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -66,7 +66,8 @@ class IAddressSchema {
         "postalCode": postalCode,
         "country": country,
         "countryCode": countryCode,
-        "geometry": geometry.toJson(),
+        "geometry": geometry == null ? null : geometry!.toJson(),
+        "apt": apt,
       };
 }
 

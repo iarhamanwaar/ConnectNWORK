@@ -7,6 +7,10 @@ var sanityClient = SanityClient(
   projectId: '7d3rcta7',
 );
 
+String? server;
+
+String? appleSignInRedirectURI;
+
 final navigatorKey = GlobalKey<NavigatorState>();
 
 final messengerKey = GlobalKey<ScaffoldMessengerState>();

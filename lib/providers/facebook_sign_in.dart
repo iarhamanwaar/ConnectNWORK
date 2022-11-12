@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 
 class FacebookSign {
-  static Future facebookLogin(BuildContext context) async {
+  static Future login() async {
     showDialog(
-      context: context,
+      context: navigatorKey.currentContext!,
       barrierDismissible: false,
       builder: (context) {
         return const Center(
@@ -19,12 +19,13 @@ class FacebookSign {
     try {
       final LoginResult loginResult = await FacebookAuth.instance.login();
 
-      final OAuthCredential facebookAuthCredential =
-          FacebookAuthProvider.credential(
-        loginResult.accessToken!.token,
-      );
+      if (loginResult.accessToken != null) {
+        final OAuthCredential facebookAuthCredential = FacebookAuthProvider.credential(
+          loginResult.accessToken!.token,
+        );
 
-      await FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
+        await FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
+      }
     } on FirebaseException catch (e) {
       Utils.showSnackbar(e.message);
     }
