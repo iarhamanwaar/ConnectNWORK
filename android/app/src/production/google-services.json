@@ -14,11 +14,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "8401053360-tjlgof5d3d3erv3mr0mpc8i8t205rkvr.apps.googleusercontent.com",
+          "client_id": "8401053360-1q4hasfn7f1a4ff97cldsca02ct054oo.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.connectnwork.app",
-            "certificate_hash": "d099f0c1f8dd69854cdbb44d689511891095e5a4"
+            "certificate_hash": "19c03351e2773e2edaa41ce45c02752c1401bddd"
           }
         },
         {
