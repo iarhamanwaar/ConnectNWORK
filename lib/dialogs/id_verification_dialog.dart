@@ -193,7 +193,6 @@ class _Step1State extends State<Step1> {
                         onTap: () async {
                           frontOfID = await picker.pickImage(
                             source: ImageSource.camera,
-                            imageQuality: 10,
                           );
                           setState(() {
                             frontOfID;
@@ -263,7 +262,6 @@ class _Step1State extends State<Step1> {
                         onTap: () async {
                           backOfID = await picker.pickImage(
                             source: ImageSource.camera,
-                            imageQuality: 10,
                           );
                           setState(() {
                             backOfID;
@@ -406,7 +404,6 @@ class _Step2State extends State<Step2> {
                   onTap: () async {
                     facePicture = await picker.pickImage(
                       source: ImageSource.camera,
-                      imageQuality: 10,
                     );
                     setState(() {
                       facePicture;
@@ -441,6 +438,16 @@ class _Step2State extends State<Step2> {
             ElevatedButton(
               onPressed: () async {
                 if (facePicture != null) {
+                  showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (context) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    },
+                  );
+
                   File fIDFile = File(frontOfID!.path);
                   Uint8List fIDbytes = await fIDFile.readAsBytes();
                   String fIDbase64string = base64.encode(fIDbytes);
@@ -453,6 +460,10 @@ class _Step2State extends State<Step2> {
                   Uint8List fPbytes = await fPFile.readAsBytes();
                   String fPbase64string = base64.encode(fPbytes);
 
+                  print(fIDbase64string);
+                  print(bIDbase64string);
+                  print(fPbase64string);
+
                   await UserRepository.verify(
                     idFrontSideImgBase64: fIDbase64string,
                     idBackSideImgBase64: bIDbase64string,
@@ -460,6 +471,9 @@ class _Step2State extends State<Step2> {
                     idType: dropdownValue,
                     idCountryCode: myProfile!.address!.countryCode,
                   );
+
+                  navigatorKey.currentState!.pop();
+                  navigatorKey.currentState!.pop();
                 }
               },
               style: ButtonStyle(

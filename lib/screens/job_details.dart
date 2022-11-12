@@ -1,4 +1,5 @@
 import 'package:connectnwork/constants.dart';
+import 'package:connectnwork/dialogs/apply_job_dialog.dart';
 import 'package:connectnwork/models/job_model.dart';
 import 'package:connectnwork/repos/jobs_repository.dart';
 import 'package:connectnwork/widgets/app_bar.dart';
@@ -157,6 +158,8 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
                           ),
                         );
                       } else {
+                        await showApplyJobDialog();
+
                         showDialog(
                           context: context,
                           barrierDismissible: false,
