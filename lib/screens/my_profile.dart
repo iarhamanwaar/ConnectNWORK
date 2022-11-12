@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:connectnwork/constants.dart';
 import 'package:connectnwork/dialogs/address_verification_dialog.dart';
 import 'package:connectnwork/dialogs/id_verification_dialog.dart';
+import 'package:connectnwork/dialogs/username_dialog.dart';
 import 'package:connectnwork/repos/user_repository.dart';
 import 'package:connectnwork/widgets/app_bar.dart';
 import 'package:connectnwork/widgets/drawer.dart';
@@ -44,7 +45,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
     return ScaffoldGradient(
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        drawer: verified ? const CustomDrawer() : null,
+        drawer: const CustomDrawer(),
         appBar: const CustomAppBar(
           title: 'My Profile',
           drawer: true,
@@ -293,128 +294,128 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                     ],
                   ),
                 ),
-                const SizedBox(
-                  height: 17,
-                ),
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.only(
-                    top: 8.0,
-                    left: 18.0,
-                    right: 18.0,
-                    bottom: 10.0,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Color(0x0ff0000d),
-                        blurRadius: 30,
-                        offset: Offset(0, 20),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Phone',
-                        style: GoogleFonts.montserrat(
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black,
-                          fontSize: 12,
-                        ),
-                      ),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Expanded(
-                            child: Container(
-                              padding: const EdgeInsets.only(
-                                top: 7.5,
-                              ),
-                              child: TextField(
-                                controller: _phoneController,
-                                textAlign: TextAlign.center,
-                                decoration: InputDecoration(
-                                  isDense: true,
-                                  contentPadding: const EdgeInsets.symmetric(
-                                    vertical: 5,
-                                  ),
-                                  hintText: '+1 514 521 2526',
-                                  hintStyle: GoogleFonts.montserrat(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 12,
-                                    color: const Color(0xFFDADADA),
-                                  ),
-                                  border: const OutlineInputBorder(),
-                                ),
-                                style: GoogleFonts.montserrat(
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.black,
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 25,
-                          ),
-                          GestureDetector(
-                            onTap: () async {
-                              showDialog(
-                                context: context,
-                                barrierDismissible: false,
-                                builder: (context) {
-                                  return const Center(
-                                    child: CircularProgressIndicator(),
-                                  );
-                                },
-                              );
-
-                              await UserRepository.update(phoneNumber: _phoneController.text);
-
-                              navigatorKey.currentState!.pop();
-                            },
-                            child: Text(
-                              'Update number',
-                              style: GoogleFonts.montserrat(
-                                fontWeight: FontWeight.w400,
-                                color: const Color(0xFFDADADA),
-                                fontSize: 12,
-                                decoration: TextDecoration.underline,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 20,
-                          ),
-                          // Column(
-                          //   children: [
-                          //     Text(
-                          //       'Phone Number Verified',
-                          //       style: GoogleFonts.montserrat(
-                          //         fontWeight: FontWeight.w400,
-                          //         color: Colors.black,
-                          //         fontSize: 8,
-                          //       ),
-                          //     ),
-                          //     const SizedBox(
-                          //       height: 5,
-                          //     ),
-                          //     const Icon(
-                          //       Icons.check_box,
-                          //       color: Color(0xFF3DD598),
-                          //     ),
-                          //   ],
-                          // ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
+                // const SizedBox(
+                //   height: 17,
+                // ),
+                // Container(
+                //   width: double.infinity,
+                //   padding: const EdgeInsets.only(
+                //     top: 8.0,
+                //     left: 18.0,
+                //     right: 18.0,
+                //     bottom: 10.0,
+                //   ),
+                //   decoration: BoxDecoration(
+                //     color: Colors.white,
+                //     borderRadius: BorderRadius.circular(20),
+                //     boxShadow: const [
+                //       BoxShadow(
+                //         color: Color(0x0ff0000d),
+                //         blurRadius: 30,
+                //         offset: Offset(0, 20),
+                //       ),
+                //     ],
+                //   ),
+                //   child: Column(
+                //     mainAxisAlignment: MainAxisAlignment.start,
+                //     crossAxisAlignment: CrossAxisAlignment.start,
+                //     children: [
+                //       Text(
+                //         'Phone',
+                //         style: GoogleFonts.montserrat(
+                //           fontWeight: FontWeight.w600,
+                //           color: Colors.black,
+                //           fontSize: 12,
+                //         ),
+                //       ),
+                //       Row(
+                //         crossAxisAlignment: CrossAxisAlignment.end,
+                //         children: [
+                //           Expanded(
+                //             child: Container(
+                //               padding: const EdgeInsets.only(
+                //                 top: 7.5,
+                //               ),
+                //               child: TextField(
+                //                 controller: _phoneController,
+                //                 textAlign: TextAlign.center,
+                //                 decoration: InputDecoration(
+                //                   isDense: true,
+                //                   contentPadding: const EdgeInsets.symmetric(
+                //                     vertical: 5,
+                //                   ),
+                //                   hintText: '+1 514 521 2526',
+                //                   hintStyle: GoogleFonts.montserrat(
+                //                     fontWeight: FontWeight.w400,
+                //                     fontSize: 12,
+                //                     color: const Color(0xFFDADADA),
+                //                   ),
+                //                   border: const OutlineInputBorder(),
+                //                 ),
+                //                 style: GoogleFonts.montserrat(
+                //                   fontWeight: FontWeight.w400,
+                //                   color: Colors.black,
+                //                   fontSize: 12,
+                //                 ),
+                //               ),
+                //             ),
+                //           ),
+                //           const SizedBox(
+                //             width: 25,
+                //           ),
+                //           GestureDetector(
+                //             onTap: () async {
+                //               showDialog(
+                //                 context: context,
+                //                 barrierDismissible: false,
+                //                 builder: (context) {
+                //                   return const Center(
+                //                     child: CircularProgressIndicator(),
+                //                   );
+                //                 },
+                //               );
+                //
+                //               await UserRepository.update(phoneNumber: _phoneController.text);
+                //
+                //               navigatorKey.currentState!.pop();
+                //             },
+                //             child: Text(
+                //               'Update number',
+                //               style: GoogleFonts.montserrat(
+                //                 fontWeight: FontWeight.w400,
+                //                 color: const Color(0xFFDADADA),
+                //                 fontSize: 12,
+                //                 decoration: TextDecoration.underline,
+                //               ),
+                //             ),
+                //           ),
+                //           const SizedBox(
+                //             width: 20,
+                //           ),
+                //           // Column(
+                //           //   children: [
+                //           //     Text(
+                //           //       'Phone Number Verified',
+                //           //       style: GoogleFonts.montserrat(
+                //           //         fontWeight: FontWeight.w400,
+                //           //         color: Colors.black,
+                //           //         fontSize: 8,
+                //           //       ),
+                //           //     ),
+                //           //     const SizedBox(
+                //           //       height: 5,
+                //           //     ),
+                //           //     const Icon(
+                //           //       Icons.check_box,
+                //           //       color: Color(0xFF3DD598),
+                //           //     ),
+                //           //   ],
+                //           // ),
+                //         ],
+                //       ),
+                //     ],
+                //   ),
+                // ),
                 const SizedBox(
                   height: 24,
                 ),
@@ -628,7 +629,9 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                               children: [
                                 ElevatedButton(
                                   onPressed: () async {
-                                    if (myProfile!.dob == null || myProfile!.address == null) {
+                                    if (myProfile!.firstName == null || myProfile!.lastName == null || myProfile!.phoneNumber == null) {
+                                      showUsernameDialog();
+                                    } else if (myProfile!.dob == null || myProfile!.address == null) {
                                       showAddressVerificationDialog();
                                     } else {
                                       showIDVerificationDialog();

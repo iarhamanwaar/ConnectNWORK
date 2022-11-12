@@ -21,10 +21,16 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
-def keystoreProperties = new Properties()
-def keystorePropertiesFile = rootProject.file('key.properties')
-if (keystorePropertiesFile.exists()) {
-    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+def stagingKeystoreProperties = new Properties()
+def stagingKeystorePropertiesFile = rootProject.file('stag-key.properties')
+if (stagingKeystorePropertiesFile.exists()) {
+    stagingKeystoreProperties.load(new FileInputStream(stagingKeystorePropertiesFile))
+}
+
+def productionKeystoreProperties = new Properties()
+def productionKeystorePropertiesFile = rootProject.file('prod-key.properties')
+if (productionKeystorePropertiesFile.exists()) {
+    productionKeystoreProperties.load(new FileInputStream(productionKeystorePropertiesFile))
 }
 
 apply plugin: 'com.android.application'
@@ -56,22 +62,26 @@ android {
     }
 
     signingConfigs {
+        debug {
+            keyAlias stagingKeystoreProperties['keyAlias']
+            keyPassword stagingKeystoreProperties['keyPassword']
+            storeFile stagingKeystoreProperties['storeFile'] ? file(stagingKeystoreProperties['storeFile']) : null
+            storePassword stagingKeystoreProperties['storePassword']
+        }
+
         release {
-            if (System.getenv()["CI"]) { // CI=true is exported by Codemagic
-                storeFile file(System.getenv()["CM_KEYSTORE_PATH"])
-                storePassword System.getenv()["CM_KEYSTORE_PASSWORD"]
-                keyAlias System.getenv()["CM_KEY_ALIAS"]
-                keyPassword System.getenv()["CM_KEY_PASSWORD"]
-            } else {
-                keyAlias keystoreProperties['keyAlias']
-                keyPassword keystoreProperties['keyPassword']
-                storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
-                storePassword keystoreProperties['storePassword']
-            }
+            keyAlias productionKeystoreProperties['keyAlias']
+            keyPassword productionKeystoreProperties['keyPassword']
+            storeFile productionKeystoreProperties['storeFile'] ? file(productionKeystoreProperties['storeFile']) : null
+            storePassword productionKeystoreProperties['storePassword']
         }
     }
 
     buildTypes {
+        debug {
+            signingConfig signingConfigs.debug
+        }
+
         release {
             signingConfig signingConfigs.release
         }
@@ -81,7 +91,7 @@ android {
     productFlavors {
         production {
             dimension "default"
-            resValue "string", "app_name", "Connect&Work"
+            resValue "string", "app_name", "Connect&WORK"
             resValue "string", "facebook_app_id", "1325235681553071"
             resValue "string", "fb_login_protocol_scheme", "fb1325235681553071"
             resValue "string", "facebook_client_token", "dceb620a8f112d1cde90af5a369abb2d"
@@ -105,6 +115,6 @@ flutter {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation platform('com.google.firebase:firebase-bom:30.2.0')
+    implementation platform('com.google.firebase:firebase-bom:31.0.2')
     implementation 'com.google.firebase:firebase-analytics'
 }

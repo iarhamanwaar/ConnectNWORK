@@ -100,7 +100,7 @@ class _PaymentsSetupScreenState extends State<PaymentsSetupScreen> {
                                       contentPadding: const EdgeInsets.symmetric(
                                         vertical: 9.0,
                                       ),
-                                      hintText: 'corrababi@gmail.com',
+                                      hintText: 'abc@email.com',
                                       hintStyle: GoogleFonts.montserrat(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w400,

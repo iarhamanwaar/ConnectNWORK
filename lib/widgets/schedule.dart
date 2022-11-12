@@ -119,6 +119,7 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
                                   job: hired[index],
                                   onPress: () {},
                                   hired: true,
+                                  dateWithTime: true,
                                 ),
                                 const SizedBox(
                                   height: 9,
@@ -181,6 +182,7 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
                               job: inProgress[index],
                               onPress: () {},
                               inProgress: true,
+                              dateWithTime: true,
                             ),
                             const SizedBox(
                               height: 9,
@@ -222,6 +224,7 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
                               job: hired[index],
                               onPress: () {},
                               hired: true,
+                              dateWithTime: true,
                             ),
                             const SizedBox(
                               height: 9,
