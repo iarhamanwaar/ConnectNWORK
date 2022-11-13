@@ -1,5 +1,4 @@
 import 'package:connectnwork/models/earnings_model.dart';
-import 'package:connectnwork/models/employee_job_model.dart';
 import 'package:connectnwork/repos/jobs_repository.dart';
 import 'package:connectnwork/widgets/app_bar.dart';
 import 'package:connectnwork/widgets/earning_card.dart';

@@ -24,7 +24,7 @@ Future<void> showAddressVerificationDialog() async {
 
   if (myProfile!.address != null && myProfile!.address!.formattedAddress != null) {
     addressController.text = myProfile!.address!.formattedAddress!;
-    if (myProfile!.address!.apt != null) aptController.text = myProfile!.address!.apt;
+    if (myProfile!.address!.apt != null) aptController.text = myProfile!.address!.apt!;
     selectedAddress = myProfile!.address!.toIAddressSchema();
   }
 

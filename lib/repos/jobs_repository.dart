@@ -2,6 +2,7 @@ import 'package:connectnwork/models/earnings_model.dart';
 import 'package:connectnwork/models/employee_job_model.dart' as ej;
 import 'package:connectnwork/models/job_model.dart';
 import 'package:connectnwork/services/api_service.dart';
+import 'package:flutter/foundation.dart';
 
 class JobsRepository {
   static Future<List<Job>?> browse() async {
@@ -32,7 +33,9 @@ class JobsRepository {
 
       return ej.employeeJobFromJson(response.body);
     } catch (e) {
-      print('Exception thrown from JobsRepository while getting user jobs, error: $e');
+      if (kDebugMode) {
+        print('Exception thrown from JobsRepository while getting user jobs, error: $e');
+      }
       throw 'Exception thrown from JobsRepository while getting user jobs, error: $e';
     }
   }

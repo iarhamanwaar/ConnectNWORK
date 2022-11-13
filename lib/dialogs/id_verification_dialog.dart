@@ -460,10 +460,6 @@ class _Step2State extends State<Step2> {
                   Uint8List fPbytes = await fPFile.readAsBytes();
                   String fPbase64string = base64.encode(fPbytes);
 
-                  print(fIDbase64string);
-                  print(bIDbase64string);
-                  print(fPbase64string);
-
                   await UserRepository.verify(
                     idFrontSideImgBase64: fIDbase64string,
                     idBackSideImgBase64: bIDbase64string,
@@ -471,6 +467,8 @@ class _Step2State extends State<Step2> {
                     idType: dropdownValue,
                     idCountryCode: myProfile!.address!.countryCode,
                   );
+
+                  myProfile = await UserRepository.get();
 
                   navigatorKey.currentState!.pop();
                   navigatorKey.currentState!.pop();

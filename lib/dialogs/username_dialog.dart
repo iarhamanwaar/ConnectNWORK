@@ -1,13 +1,9 @@
 import 'package:connectnwork/constants.dart';
 import 'package:connectnwork/dialogs/address_verification_dialog.dart';
-import 'package:connectnwork/dialogs/id_verification_dialog.dart';
-import 'package:connectnwork/models/iaddress_schema.dart';
-import 'package:connectnwork/repos/location_repository.dart';
 import 'package:connectnwork/repos/user_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 
 Future<void> showUsernameDialog() async {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();

@@ -1,6 +1,7 @@
 // To parse this JSON data, do
 //
 //     final myProfile = myProfileFromJson(jsonString);
+
 // ignore_for_file: prefer_if_null_operators
 
 import 'dart:convert';
@@ -13,33 +14,39 @@ String myProfileToJson(MyProfile data) => json.encode(data.toJson());
 
 class MyProfile {
   MyProfile({
-    required this.suspended,
-    required this.id,
-    required this.fuid,
-    required this.firstName,
-    required this.lastName,
-    required this.fullName,
-    required this.email,
-    required this.idVerified,
-    required this.address,
-    required this.locale,
-    required this.picture,
-    required this.type,
-    required this.resume,
-    required this.workPermit,
-    required this.phoneNumber,
-    required this.interac,
-    required this.bio,
-    required this.dob,
-    required this.notification,
-    required this.ssn,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.v,
-    required this.deviceIds,
+    this.emailSubscription,
+    this.certnVerify,
+    this.rating,
+    this.id,
+    this.fuid,
+    this.firstName,
+    this.lastName,
+    this.fullName,
+    this.email,
+    this.idVerified,
+    this.address,
+    this.locale,
+    this.picture,
+    this.type,
+    this.resume,
+    this.workPermit,
+    this.phoneNumber,
+    this.interac,
+    this.bio,
+    this.dob,
+    this.notification,
+    this.ssn,
+    this.createdAt,
+    this.updatedAt,
+    this.v,
+    this.deviceIds,
+    this.status,
+    this.timezone,
   });
 
-  bool? suspended;
+  bool? emailSubscription;
+  bool? certnVerify;
+  dynamic rating;
   String? id;
   String? fuid;
   String? firstName;
@@ -58,14 +65,18 @@ class MyProfile {
   dynamic bio;
   DateTime? dob;
   bool? notification;
-  dynamic ssn;
+  String? ssn;
   DateTime? createdAt;
   DateTime? updatedAt;
   int? v;
   List<String>? deviceIds;
+  String? status;
+  String? timezone;
 
   factory MyProfile.fromJson(Map<String, dynamic> json) => MyProfile(
-        suspended: json["suspended"] == null ? null : json["suspended"],
+        emailSubscription: json["emailSubscription"] == null ? null : json["emailSubscription"],
+        certnVerify: json["certnVerify"] == null ? null : json["certnVerify"],
+        rating: json["rating"],
         id: json["_id"] == null ? null : json["_id"],
         fuid: json["fuid"] == null ? null : json["fuid"],
         firstName: json["firstName"] == null ? null : json["firstName"],
@@ -84,15 +95,19 @@ class MyProfile {
         bio: json["bio"],
         dob: json["dob"] == null ? null : DateTime.parse(json["dob"]),
         notification: json["notification"] == null ? null : json["notification"],
-        ssn: json["ssn"],
+        ssn: json["ssn"] == null ? null : json["ssn"],
         createdAt: json["createdAt"] == null ? null : DateTime.parse(json["createdAt"]),
         updatedAt: json["updatedAt"] == null ? null : DateTime.parse(json["updatedAt"]),
         v: json["__v"] == null ? null : json["__v"],
         deviceIds: json["deviceIds"] == null ? null : List<String>.from(json["deviceIds"].map((x) => x)),
+        status: json["status"] == null ? null : json["status"],
+        timezone: json["timezone"] == null ? null : json["timezone"],
       );
 
   Map<String, dynamic> toJson() => {
-        "suspended": suspended == null ? null : suspended,
+        "emailSubscription": emailSubscription == null ? null : emailSubscription,
+        "certnVerify": certnVerify == null ? null : certnVerify,
+        "rating": rating,
         "_id": id == null ? null : id,
         "fuid": fuid == null ? null : fuid,
         "firstName": firstName == null ? null : firstName,
@@ -111,34 +126,36 @@ class MyProfile {
         "bio": bio,
         "dob": dob == null ? null : dob!.toIso8601String(),
         "notification": notification == null ? null : notification,
-        "ssn": ssn,
+        "ssn": ssn == null ? null : ssn,
         "createdAt": createdAt == null ? null : createdAt!.toIso8601String(),
         "updatedAt": updatedAt == null ? null : updatedAt!.toIso8601String(),
         "__v": v == null ? null : v,
         "deviceIds": deviceIds == null ? null : List<dynamic>.from(deviceIds!.map((x) => x)),
+        "status": status == null ? null : status,
+        "timezone": timezone == null ? null : timezone,
       };
 }
 
 class Address {
   Address({
-    required this.geoLocation,
-    required this.apt,
-    required this.streetNumber,
-    required this.addressLine1,
-    required this.addressLine2,
-    required this.city,
-    required this.postalCode,
-    required this.state,
-    required this.stateCode,
-    required this.country,
-    required this.countryCode,
-    required this.formattedAddress,
-    required this.formattedAddress2,
-    required this.geometry,
+    this.geoLocation,
+    this.apt,
+    this.streetNumber,
+    this.addressLine1,
+    this.addressLine2,
+    this.city,
+    this.postalCode,
+    this.state,
+    this.stateCode,
+    this.country,
+    this.countryCode,
+    this.formattedAddress,
+    this.formattedAddress2,
+    this.geometry,
   });
 
   GeoLocation? geoLocation;
-  dynamic apt;
+  String? apt;
   String? streetNumber;
   String? addressLine1;
   String? addressLine2;
@@ -150,11 +167,11 @@ class Address {
   String? countryCode;
   String? formattedAddress;
   String? formattedAddress2;
-  Geometry? geometry;
+  dynamic geometry;
 
   factory Address.fromJson(Map<String, dynamic> json) => Address(
         geoLocation: json["geoLocation"] == null ? null : GeoLocation.fromJson(json["geoLocation"]),
-        apt: json["apt"] == null ? null : json['apt'],
+        apt: json["apt"] == null ? null : json["apt"],
         streetNumber: json["streetNumber"] == null ? null : json["streetNumber"],
         addressLine1: json["addressLine1"] == null ? null : json["addressLine1"],
         addressLine2: json["addressLine2"] == null ? null : json["addressLine2"],
@@ -166,7 +183,7 @@ class Address {
         countryCode: json["countryCode"] == null ? null : json["countryCode"],
         formattedAddress: json["formattedAddress"] == null ? null : json["formattedAddress"],
         formattedAddress2: json["formattedAddress2"] == null ? null : json["formattedAddress2"],
-        geometry: json["geometry"] == null ? null : Geometry.fromJson(json["geometry"]),
+        geometry: json["geometry"],
       );
 
   IAddressSchema toIAddressSchema() {
@@ -189,7 +206,7 @@ class Address {
 
   Map<String, dynamic> toJson() => {
         "geoLocation": geoLocation == null ? null : geoLocation!.toJson(),
-        "apt": apt,
+        "apt": apt == null ? null : apt,
         "streetNumber": streetNumber == null ? null : streetNumber,
         "addressLine1": addressLine1 == null ? null : addressLine1,
         "addressLine2": addressLine2 == null ? null : addressLine2,
@@ -201,14 +218,14 @@ class Address {
         "countryCode": countryCode == null ? null : countryCode,
         "formattedAddress": formattedAddress == null ? null : formattedAddress,
         "formattedAddress2": formattedAddress2 == null ? null : formattedAddress2,
-        "geometry": geometry == null ? null : geometry!.toJson(),
+        "geometry": geometry,
       };
 }
 
 class GeoLocation {
   GeoLocation({
-    required this.type,
-    required this.coordinates,
+    this.type,
+    this.coordinates,
   });
 
   String? type;
@@ -222,65 +239,5 @@ class GeoLocation {
   Map<String, dynamic> toJson() => {
         "type": type == null ? null : type,
         "coordinates": coordinates == null ? null : List<dynamic>.from(coordinates!.map((x) => x)),
-      };
-}
-
-class Geometry {
-  Geometry({
-    required this.location,
-    required this.viewport,
-  });
-
-  Location? location;
-  Viewport? viewport;
-
-  factory Geometry.fromJson(Map<String, dynamic> json) => Geometry(
-        location: json["location"] == null ? null : Location.fromJson(json["location"]),
-        viewport: json["viewport"] == null ? null : Viewport.fromJson(json["viewport"]),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "location": location == null ? null : location!.toJson(),
-        "viewport": viewport == null ? null : viewport!.toJson(),
-      };
-}
-
-class Location {
-  Location({
-    required this.lat,
-    required this.lng,
-  });
-
-  double? lat;
-  double? lng;
-
-  factory Location.fromJson(Map<String, dynamic> json) => Location(
-        lat: json["lat"] == null ? null : json["lat"]!.toDouble(),
-        lng: json["lng"] == null ? null : json["lng"]!.toDouble(),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "lat": lat == null ? null : lat,
-        "lng": lng == null ? null : lng,
-      };
-}
-
-class Viewport {
-  Viewport({
-    required this.northeast,
-    required this.southwest,
-  });
-
-  Location? northeast;
-  Location? southwest;
-
-  factory Viewport.fromJson(Map<String, dynamic> json) => Viewport(
-        northeast: json["northeast"] == null ? null : Location.fromJson(json["northeast"]),
-        southwest: json["southwest"] == null ? null : Location.fromJson(json["southwest"]),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "northeast": northeast == null ? null : northeast!.toJson(),
-        "southwest": southwest == null ? null : southwest!.toJson(),
       };
 }

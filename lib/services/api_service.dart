@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:connectnwork/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 mixin APIService {
@@ -34,19 +35,21 @@ mixin APIService {
   }) async {
     String token = await FirebaseAuth.instance.currentUser!.getIdToken();
 
-    if (token.length > 950) {
-      print('token.length = ${token.length}');
-      int chunkCount = token.length ~/ 950;
-      for (int i = 0; i <= chunkCount; i++) {
-        int max = 950 * (i + 1);
-        if (max >= token.length) {
-          print('chunk $i of $chunkCount: ${token.substring(950 * i)}');
-        } else {
-          print('chunk $i of $chunkCount: ${token.substring(950 * i, max)}');
+    if (kDebugMode) {
+      if (token.length > 950) {
+        print('token.length = ${token.length}');
+        int chunkCount = token.length ~/ 950;
+        for (int i = 0; i <= chunkCount; i++) {
+          int max = 950 * (i + 1);
+          if (max >= token.length) {
+            print('chunk $i of $chunkCount: ${token.substring(950 * i)}');
+          } else {
+            print('chunk $i of $chunkCount: ${token.substring(950 * i, max)}');
+          }
         }
+      } else {
+        print(token);
       }
-    } else {
-      print(token);
     }
 
     http.Response response;

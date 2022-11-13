@@ -1,8 +1,5 @@
-import 'package:connectnwork/constants.dart';
 import 'package:connectnwork/models/employee_job_model.dart';
-import 'package:connectnwork/repos/jobs_repository.dart';
 import 'package:connectnwork/widgets/app_bar.dart';
-import 'package:connectnwork/widgets/browse_job_card.dart';
 import 'package:connectnwork/widgets/scaffold_gradient.dart';
 import 'package:connectnwork/widgets/schedule_job_card.dart';
 import 'package:flutter/material.dart';

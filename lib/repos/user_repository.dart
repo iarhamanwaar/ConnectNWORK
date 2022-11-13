@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:connectnwork/models/iaddress_schema.dart';
 import 'package:connectnwork/models/my_profile_model.dart';
 import 'package:connectnwork/models/notification_model.dart';
@@ -137,7 +135,9 @@ class UserRepository {
         body: body,
       );
 
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
     } catch (e) {
       throw 'Exception thrown from UserRepository while posting certn details.';
     }

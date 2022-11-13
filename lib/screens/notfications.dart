@@ -119,7 +119,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                     navigatorKey.currentState!.pop();
                                   },
                                   child: const Icon(
-                                    FontAwesomeIcons.xmarkCircle,
+                                    FontAwesomeIcons.circleXmark,
                                     size: 15,
                                   ),
                                 ),
