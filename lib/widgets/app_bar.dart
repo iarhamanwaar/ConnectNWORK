@@ -47,7 +47,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             return Padding(
               padding: const EdgeInsets.only(left: 20.0),
               child: GestureDetector(
-                onTap: myProfile!.idVerified != null
+                onTap: myProfile!.idVerified != null && myProfile!.idVerified == true
                     ? () {
                         Scaffold.of(context).openDrawer();
                       }
@@ -61,18 +61,19 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         },
       ),
       actions: [
-        if (myProfile!.idVerified != null)
-          Padding(
-            padding: const EdgeInsets.only(right: 20.0),
-            child: GestureDetector(
-              onTap: () {
+        Padding(
+          padding: const EdgeInsets.only(right: 20.0),
+          child: GestureDetector(
+            onTap: () {
+              if (myProfile!.idVerified != null && myProfile!.idVerified == true) {
                 navigatorKey.currentState!.pushNamed('/notifications');
-              },
-              child: SvgPicture.asset(
-                'assets/bell_icon.svg',
-              ),
+              }
+            },
+            child: SvgPicture.asset(
+              'assets/bell_icon.svg',
             ),
           ),
+        ),
       ],
       backgroundColor: Colors.transparent,
       elevation: 0,

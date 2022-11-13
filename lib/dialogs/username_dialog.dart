@@ -2,6 +2,7 @@ import 'package:connectnwork/constants.dart';
 import 'package:connectnwork/dialogs/address_verification_dialog.dart';
 import 'package:connectnwork/repos/user_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -160,7 +161,8 @@ Future<void> showUsernameDialog() async {
                           child: TextFormField(
                             controller: phoneController,
                             autocorrect: false,
-                            keyboardType: TextInputType.text,
+                            keyboardType: TextInputType.number,
+                            inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
                             validator: (value) {
                               if (value == '') {
                                 return 'Please enter your phone number';

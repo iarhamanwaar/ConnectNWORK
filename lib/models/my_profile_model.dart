@@ -218,7 +218,7 @@ class Address {
         "countryCode": countryCode == null ? null : countryCode,
         "formattedAddress": formattedAddress == null ? null : formattedAddress,
         "formattedAddress2": formattedAddress2 == null ? null : formattedAddress2,
-        "geometry": geometry,
+        "geometry": geometry == null ? null : geometry,
       };
 }
 

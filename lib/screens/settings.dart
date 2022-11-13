@@ -1,8 +1,10 @@
 import 'package:connectnwork/constants.dart';
+import 'package:connectnwork/repos/user_repository.dart';
 import 'package:connectnwork/widgets/app_bar.dart';
 import 'package:connectnwork/widgets/drawer.dart';
 import 'package:connectnwork/widgets/scaffold_gradient.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -233,24 +235,26 @@ class _SettingsPageState extends State<SettingsPage> {
                           rethrow;
                         }
 
+                        String? deviceIdToken = await FirebaseMessaging.instance.getToken();
+
+                        if (deviceIdToken != null) {
+                          UserRepository.deleteNotifcation(id: deviceIdToken);
+                        }
+
                         navigatorKey.currentState!.popUntil((route) => route.isFirst);
 
                         navigatorKey.currentState!.pushReplacementNamed('/main');
                       },
-                      style: ButtonStyle(
-                        padding: MaterialStateProperty.all(
-                          const EdgeInsets.symmetric(
-                            horizontal: 20.0,
-                            vertical: 14.0,
-                          ),
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20.0,
+                          vertical: 14.0,
                         ),
-                        elevation: MaterialStateProperty.all(0),
-                        shape: MaterialStateProperty.all(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
                         ),
-                        backgroundColor: MaterialStateProperty.all(Colors.white),
+                        backgroundColor: Colors.white,
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,

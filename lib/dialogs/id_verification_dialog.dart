@@ -193,6 +193,7 @@ class _Step1State extends State<Step1> {
                         onTap: () async {
                           frontOfID = await picker.pickImage(
                             source: ImageSource.camera,
+                            imageQuality: 10,
                           );
                           setState(() {
                             frontOfID;
@@ -262,6 +263,7 @@ class _Step1State extends State<Step1> {
                         onTap: () async {
                           backOfID = await picker.pickImage(
                             source: ImageSource.camera,
+                            imageQuality: 10,
                           );
                           setState(() {
                             backOfID;
@@ -404,6 +406,7 @@ class _Step2State extends State<Step2> {
                   onTap: () async {
                     facePicture = await picker.pickImage(
                       source: ImageSource.camera,
+                      imageQuality: 10,
                     );
                     setState(() {
                       facePicture;

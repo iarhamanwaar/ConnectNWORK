@@ -3,15 +3,18 @@ import 'dart:io';
 
 import 'package:connectnwork/constants.dart';
 import 'package:connectnwork/dialogs/address_verification_dialog.dart';
+import 'package:connectnwork/dialogs/id_completion_dialog.dart';
 import 'package:connectnwork/dialogs/id_verification_dialog.dart';
 import 'package:connectnwork/dialogs/username_dialog.dart';
 import 'package:connectnwork/repos/user_repository.dart';
 import 'package:connectnwork/widgets/app_bar.dart';
 import 'package:connectnwork/widgets/drawer.dart';
 import 'package:connectnwork/widgets/scaffold_gradient.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -27,11 +30,21 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
   int currentStep = 1;
   bool verified = false;
   String userProfilePicture = '';
+  FilePickerResult? resume;
+  FilePickerResult? workPermit;
+  File? resumeFile;
+  File? workPermitFile;
+  bool resumeUploaded = false;
+  bool workPermitUploaded = false;
 
   @override
   Widget build(BuildContext context) {
     if (myProfile!.picture != null) {
       userProfilePicture = myProfile!.picture!;
+    }
+
+    if (myProfile!.certnVerify != null && myProfile!.certnVerify! == true) {
+      currentStep = 2;
     }
 
     if (myProfile!.idVerified != null) {
@@ -40,6 +53,14 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
 
     if (myProfile!.phoneNumber != null) {
       _phoneController.text = myProfile!.phoneNumber!;
+    }
+
+    if (myProfile!.resume != null) {
+      resumeUploaded = true;
+    }
+
+    if (myProfile!.workPermit != null) {
+      workPermitUploaded = true;
     }
 
     return ScaffoldGradient(
@@ -267,10 +288,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                             border: Border.all(),
                           ),
                           child: Image.network(
-                            // imageUrl:
                             userProfilePicture,
                             fit: BoxFit.cover,
-                            //progressIndicatorBuilder: (context, url, error) => const CircularProgressIndicator(),
                             errorBuilder: (context, url, error) => const Icon(Icons.error),
                           ),
                         ),
@@ -539,10 +558,14 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                         children: [
                           Container(
                             decoration: BoxDecoration(
-                              color: const Color(0xFF009FE3).withOpacity(0.06),
-                              border: Border.all(
-                                color: const Color(0xFF009FE3),
-                              ),
+                              color: currentStep == 1 ? const Color(0xFF009FE3).withOpacity(0.06) : const Color(0xFFFFFFFF),
+                              border: currentStep == 1
+                                  ? Border.all(
+                                      color: const Color(0xFF009FE3),
+                                    )
+                                  : Border.all(
+                                      color: const Color(0xFFE5E5E5),
+                                    ),
                               borderRadius: BorderRadius.circular(
                                 5.0,
                               ),
@@ -557,7 +580,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                 style: GoogleFonts.montserrat(
                                   fontWeight: FontWeight.w400,
                                   fontSize: 12,
-                                  color: const Color(0xFF009FE3),
+                                  color: currentStep == 1 ? const Color(0xFF009FE3) : const Color(0xFFE5E5E5),
                                 ),
                               ),
                             ),
@@ -599,7 +622,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                       const SizedBox(
                         height: 25,
                       ),
-                      if (myProfile!.idVerified == null || myProfile!.idVerified! == false)
+                      if (currentStep == 1 && (myProfile!.idVerified == null || myProfile!.idVerified! == false))
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -630,11 +653,17 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                 ElevatedButton(
                                   onPressed: () async {
                                     if (myProfile!.firstName == null || myProfile!.lastName == null || myProfile!.phoneNumber == null) {
-                                      showUsernameDialog();
+                                      showUsernameDialog().then((value) => setState(() {
+                                            myProfile;
+                                          }));
                                     } else if (myProfile!.dob == null || myProfile!.address == null) {
-                                      showAddressVerificationDialog();
+                                      showAddressVerificationDialog().then((value) => setState(() {
+                                            myProfile;
+                                          }));
                                     } else {
-                                      showIDVerificationDialog();
+                                      showIDVerificationDialog().then((value) => setState(() {
+                                            myProfile;
+                                          }));
                                     }
                                   },
                                   style: ButtonStyle(
@@ -660,6 +689,160 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                         fontWeight: FontWeight.w600,
                                         color: Colors.white,
                                       ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      if (currentStep == 2 && (myProfile!.idVerified == null || myProfile!.idVerified! == false))
+                        Column(
+                          children: [
+                            RichText(
+                              text: TextSpan(
+                                text: 'Upload your latest resume',
+                                style: GoogleFonts.montserrat(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black,
+                                  height: 2,
+                                ),
+                                children: [
+                                  TextSpan(
+                                    text: '*',
+                                    style: GoogleFonts.montserrat(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.red,
+                                      height: 2,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                ElevatedButton(
+                                  onPressed: () async {
+                                    resume = await FilePicker.platform.pickFiles();
+
+                                    if (resume != null) {
+                                      resumeFile = File(resume!.files.single.path!);
+
+                                      setState(() {
+                                        resumeUploaded = true;
+                                      });
+                                    }
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                    elevation: 0,
+                                    backgroundColor: resumeUploaded == false ? const Color(0xFF77838F) : const Color(0xFF31C889).withOpacity(0.1),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 3.0,
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          FontAwesomeIcons.image,
+                                          color: resumeUploaded == false ? Colors.white : const Color(0xFF31C889),
+                                          size: 15,
+                                        ),
+                                        const SizedBox(
+                                          width: 10,
+                                        ),
+                                        Text(
+                                          resumeUploaded == false ? 'Upload File' : 'File uploaded',
+                                          style: GoogleFonts.montserrat(
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.w400,
+                                            color: resumeUploaded == false ? Colors.white : const Color(0xFF31C889),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 15,
+                            ),
+                            Text(
+                              'Upload a valid work and study permit',
+                              style: GoogleFonts.montserrat(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black,
+                                height: 2,
+                              ),
+                            ),
+                            Text(
+                              '(for non permanent residents or canadian citizens)',
+                              style: GoogleFonts.montserrat(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.red,
+                                height: 2,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                ElevatedButton(
+                                  onPressed: () async {
+                                    workPermit = await FilePicker.platform.pickFiles();
+
+                                    if (workPermit != null) {
+                                      workPermitFile = File(workPermit!.files.single.path!);
+
+                                      setState(() {
+                                        workPermitUploaded = true;
+                                      });
+                                    }
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                    elevation: 0,
+                                    backgroundColor: workPermitUploaded == false ? const Color(0xFF77838F) : const Color(0xFF31C889).withOpacity(0.1),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 3.0,
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          FontAwesomeIcons.image,
+                                          color: workPermitUploaded == false ? Colors.white : const Color(0xFF31C889),
+                                          size: 15,
+                                        ),
+                                        const SizedBox(
+                                          width: 10,
+                                        ),
+                                        Text(
+                                          workPermitUploaded == false ? 'Upload File' : 'File uploaded',
+                                          style: GoogleFonts.montserrat(
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.w400,
+                                            color: workPermitUploaded == false ? Colors.white : const Color(0xFF31C889),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
@@ -708,6 +891,85 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                         ),
                     ],
                   ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    if (resumeUploaded == false)
+                      ElevatedButton(
+                        onPressed: () async {
+                          showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (context) {
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            },
+                          );
+
+                          if (resumeFile != null && workPermitFile != null) {
+                            Uint8List resumeBytes = await resumeFile!.readAsBytes();
+                            String resumeBase64string = base64.encode(resumeBytes);
+
+                            Uint8List workPermitBytes = await workPermitFile!.readAsBytes();
+                            String workPermitBase64string = base64.encode(workPermitBytes);
+
+                            await UserRepository.update(
+                              resume: resumeBase64string,
+                              workPermit: workPermitBase64string,
+                            );
+                          } else if (resumeFile != null && workPermitFile == null) {
+                            Uint8List resumeBytes = await resumeFile!.readAsBytes();
+                            String resumeBase64string = base64.encode(resumeBytes);
+
+                            await UserRepository.update(
+                              resume: resumeBase64string,
+                            );
+                          } else if (resumeFile == null && workPermitFile != null) {
+                            Uint8List workPermitBytes = await workPermitFile!.readAsBytes();
+                            String workPermitBase64string = base64.encode(workPermitBytes);
+
+                            await UserRepository.update(
+                              workPermit: workPermitBase64string,
+                            );
+                          }
+
+                          myProfile = await UserRepository.get();
+
+                          setState(() {
+                            myProfile;
+                          });
+
+                          navigatorKey.currentState!.pop();
+
+                          await showIdCompletionDialog();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          elevation: 0,
+                          backgroundColor: const Color(0xFF009FE3),
+                        ),
+                        child: Text(
+                          'Complete Profile',
+                          style: GoogleFonts.montserrat(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    if (resumeUploaded == true)
+                      Text(
+                        'Under Review',
+                        style: GoogleFonts.montserrat(fontWeight: FontWeight.w600, fontSize: 24, color: const Color(0xFFEF6E45)),
+                      ),
+                  ],
                 ),
               ],
             ),
