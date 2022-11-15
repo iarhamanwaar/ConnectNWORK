@@ -188,17 +188,17 @@ class Address {
 
   IAddressSchema toIAddressSchema() {
     return IAddressSchema(
-      formattedAddress: formattedAddress!,
+      formattedAddress: country == null ? '' : formattedAddress!,
       formattedAddress2: formattedAddress2,
       streetNumber: streetNumber,
-      addressLine1: addressLine1!,
+      addressLine1: country == null ? '' : addressLine1!,
       addressLine2: addressLine2,
-      city: city!,
-      state: state!,
-      stateCode: stateCode!,
-      postalCode: postalCode!,
-      country: country!,
-      countryCode: countryCode!,
+      city: country == null ? '' : city!,
+      state: country == null ? '' : state!,
+      stateCode: country == null ? '' : stateCode!,
+      postalCode: country == null ? '' : postalCode!,
+      country: country == null ? '' : country!,
+      countryCode: country == null ? '' : countryCode!,
       geometry: null,
       apt: apt,
     );

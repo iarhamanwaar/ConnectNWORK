@@ -63,7 +63,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           padding: const EdgeInsets.only(right: 20.0),
           child: GestureDetector(
             onTap: () {
-              if (myProfile!.status != null && myProfile!.status == 'active') {
+              if (myProfile!.idVerified != null && myProfile!.idVerified! == true) {
                 navigatorKey.currentState!.pushNamed('/notifications');
               }
             },

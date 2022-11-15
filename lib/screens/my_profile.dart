@@ -50,7 +50,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
       currentStep = 2;
     }
 
-    if (myProfile!.status != null && myProfile!.status == 'active') {
+    if (myProfile!.idVerified != null && myProfile!.idVerified! == true) {
       currentStep = 1;
       verified = true;
     }
