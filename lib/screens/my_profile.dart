@@ -5,6 +5,7 @@ import 'package:connectnwork/constants.dart';
 import 'package:connectnwork/dialogs/address_verification_dialog.dart';
 import 'package:connectnwork/dialogs/id_completion_dialog.dart';
 import 'package:connectnwork/dialogs/id_verification_dialog.dart';
+import 'package:connectnwork/dialogs/update_info_dialog.dart';
 import 'package:connectnwork/dialogs/username_dialog.dart';
 import 'package:connectnwork/repos/user_repository.dart';
 import 'package:connectnwork/widgets/app_bar.dart';
@@ -488,137 +489,140 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            height: 36,
-                            width: 36,
-                            decoration: BoxDecoration(
+                      if (myProfile!.idVerified != null && myProfile!.idVerified! == false)
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              height: 36,
+                              width: 36,
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF009FE3),
+                                borderRadius: BorderRadius.circular(
+                                  60.0,
+                                ),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  '1',
+                                  style: GoogleFonts.montserrat(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              height: 2,
+                              width: 30,
                               color: const Color(0xFF009FE3),
-                              borderRadius: BorderRadius.circular(
-                                60.0,
-                              ),
                             ),
-                            child: Center(
-                              child: Text(
-                                '1',
-                                style: GoogleFonts.montserrat(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white,
+                            Container(
+                              height: 2,
+                              width: 30,
+                              color: currentStep == 2 ? const Color(0xFF009FE3) : const Color(0xFFE3F1FC),
+                            ),
+                            Container(
+                              height: 36,
+                              width: 36,
+                              decoration: BoxDecoration(
+                                color: currentStep == 2 ? const Color(0xFF009FE3) : Colors.white,
+                                border: currentStep == 2
+                                    ? Border.all(
+                                        color: const Color(0xFF000000),
+                                      )
+                                    : Border.all(
+                                        color: const Color(0xFFE3F1FC),
+                                      ),
+                                borderRadius: BorderRadius.circular(
+                                  60.0,
+                                ),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  '2',
+                                  style: GoogleFonts.montserrat(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.w600,
+                                    color: currentStep == 2 ? Colors.white : const Color(0xFF009FE3),
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          Container(
-                            height: 2,
-                            width: 30,
-                            color: const Color(0xFF009FE3),
-                          ),
-                          Container(
-                            height: 2,
-                            width: 30,
-                            color: currentStep == 2 ? const Color(0xFF009FE3) : const Color(0xFFE3F1FC),
-                          ),
-                          Container(
-                            height: 36,
-                            width: 36,
-                            decoration: BoxDecoration(
-                              color: currentStep == 2 ? const Color(0xFF009FE3) : Colors.white,
-                              border: currentStep == 2
-                                  ? Border.all(
-                                      color: const Color(0xFF000000),
-                                    )
-                                  : Border.all(
-                                      color: const Color(0xFFE3F1FC),
-                                    ),
-                              borderRadius: BorderRadius.circular(
-                                60.0,
+                          ],
+                        ),
+                      if (myProfile!.idVerified != null && myProfile!.idVerified! == false)
+                        const SizedBox(
+                          height: 22,
+                        ),
+                      if (myProfile!.idVerified != null && myProfile!.idVerified! == false)
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                color: currentStep == 1 ? const Color(0xFF009FE3).withOpacity(0.06) : const Color(0xFFFFFFFF),
+                                border: currentStep == 1
+                                    ? Border.all(
+                                        color: const Color(0xFF009FE3),
+                                      )
+                                    : Border.all(
+                                        color: const Color(0xFFE5E5E5),
+                                      ),
+                                borderRadius: BorderRadius.circular(
+                                  5.0,
+                                ),
                               ),
-                            ),
-                            child: Center(
-                              child: Text(
-                                '2',
-                                style: GoogleFonts.montserrat(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.w600,
-                                  color: currentStep == 2 ? Colors.white : const Color(0xFF009FE3),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 26.0,
+                                  vertical: 6.0,
+                                ),
+                                child: Text(
+                                  'ID verification',
+                                  style: GoogleFonts.montserrat(
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 12,
+                                    color: currentStep == 1 ? const Color(0xFF009FE3) : const Color(0xFFE5E5E5),
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 22,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              color: currentStep == 1 ? const Color(0xFF009FE3).withOpacity(0.06) : const Color(0xFFFFFFFF),
-                              border: currentStep == 1
-                                  ? Border.all(
-                                      color: const Color(0xFF009FE3),
-                                    )
-                                  : Border.all(
-                                      color: const Color(0xFFE5E5E5),
-                                    ),
-                              borderRadius: BorderRadius.circular(
-                                5.0,
-                              ),
+                            const SizedBox(
+                              width: 13.5,
                             ),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 26.0,
-                                vertical: 6.0,
+                            Container(
+                              decoration: BoxDecoration(
+                                color: currentStep == 2 ? const Color(0xFF009FE3).withOpacity(0.06) : const Color(0xFFFFFFFF),
+                                border: currentStep == 2
+                                    ? Border.all(
+                                        color: const Color(0xFF009FE3),
+                                      )
+                                    : Border.all(
+                                        color: const Color(0xFFE5E5E5),
+                                      ),
+                                borderRadius: BorderRadius.circular(
+                                  5.0,
+                                ),
                               ),
-                              child: Text(
-                                'ID verification',
-                                style: GoogleFonts.montserrat(
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 12,
-                                  color: currentStep == 1 ? const Color(0xFF009FE3) : const Color(0xFFE5E5E5),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 26.0,
+                                  vertical: 6.0,
+                                ),
+                                child: Text(
+                                  'Files',
+                                  style: GoogleFonts.montserrat(
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 12,
+                                    color: currentStep == 2 ? const Color(0xFF009FE3) : const Color(0xFFE5E5E5),
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          const SizedBox(
-                            width: 13.5,
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                              color: currentStep == 2 ? const Color(0xFF009FE3).withOpacity(0.06) : const Color(0xFFFFFFFF),
-                              border: currentStep == 2
-                                  ? Border.all(
-                                      color: const Color(0xFF009FE3),
-                                    )
-                                  : Border.all(
-                                      color: const Color(0xFFE5E5E5),
-                                    ),
-                              borderRadius: BorderRadius.circular(
-                                5.0,
-                              ),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 26.0,
-                                vertical: 6.0,
-                              ),
-                              child: Text(
-                                'Files',
-                                style: GoogleFonts.montserrat(
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 12,
-                                  color: currentStep == 2 ? const Color(0xFF009FE3) : const Color(0xFFE5E5E5),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                          ],
+                        ),
                       const SizedBox(
                         height: 25,
                       ),
@@ -868,7 +872,9 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                               height: 80,
                             ),
                             ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () async {
+                                await showUpdateInfoDialog();
+                              },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: kBluePrimary,
                                 shape: RoundedRectangleBorder(
@@ -895,82 +901,83 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                 const SizedBox(
                   height: 20,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    if (resumeUploaded == false)
-                      ElevatedButton(
-                        onPressed: () async {
-                          showDialog(
-                            context: context,
-                            barrierDismissible: false,
-                            builder: (context) {
-                              return const Center(
-                                child: CircularProgressIndicator(),
+                if (myProfile!.idVerified != null && myProfile!.idVerified! == false)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      if (resumeUploaded == false)
+                        ElevatedButton(
+                          onPressed: () async {
+                            showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (context) {
+                                return const Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              },
+                            );
+
+                            if (resumeFile != null && workPermitFile != null) {
+                              Uint8List resumeBytes = await resumeFile!.readAsBytes();
+                              String resumeBase64string = base64.encode(resumeBytes);
+
+                              Uint8List workPermitBytes = await workPermitFile!.readAsBytes();
+                              String workPermitBase64string = base64.encode(workPermitBytes);
+
+                              await UserRepository.update(
+                                resume: resumeBase64string,
+                                workPermit: workPermitBase64string,
                               );
-                            },
-                          );
+                            } else if (resumeFile != null && workPermitFile == null) {
+                              Uint8List resumeBytes = await resumeFile!.readAsBytes();
+                              String resumeBase64string = base64.encode(resumeBytes);
 
-                          if (resumeFile != null && workPermitFile != null) {
-                            Uint8List resumeBytes = await resumeFile!.readAsBytes();
-                            String resumeBase64string = base64.encode(resumeBytes);
+                              await UserRepository.update(
+                                resume: resumeBase64string,
+                              );
+                            } else if (resumeFile == null && workPermitFile != null) {
+                              Uint8List workPermitBytes = await workPermitFile!.readAsBytes();
+                              String workPermitBase64string = base64.encode(workPermitBytes);
 
-                            Uint8List workPermitBytes = await workPermitFile!.readAsBytes();
-                            String workPermitBase64string = base64.encode(workPermitBytes);
+                              await UserRepository.update(
+                                workPermit: workPermitBase64string,
+                              );
+                            }
 
-                            await UserRepository.update(
-                              resume: resumeBase64string,
-                              workPermit: workPermitBase64string,
-                            );
-                          } else if (resumeFile != null && workPermitFile == null) {
-                            Uint8List resumeBytes = await resumeFile!.readAsBytes();
-                            String resumeBase64string = base64.encode(resumeBytes);
+                            myProfile = await UserRepository.get();
 
-                            await UserRepository.update(
-                              resume: resumeBase64string,
-                            );
-                          } else if (resumeFile == null && workPermitFile != null) {
-                            Uint8List workPermitBytes = await workPermitFile!.readAsBytes();
-                            String workPermitBase64string = base64.encode(workPermitBytes);
+                            setState(() {
+                              myProfile;
+                            });
 
-                            await UserRepository.update(
-                              workPermit: workPermitBase64string,
-                            );
-                          }
+                            navigatorKey.currentState!.pop();
 
-                          myProfile = await UserRepository.get();
-
-                          setState(() {
-                            myProfile;
-                          });
-
-                          navigatorKey.currentState!.pop();
-
-                          await showIdCompletionDialog();
-                        },
-                        style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8.0),
+                            await showIdCompletionDialog();
+                          },
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            elevation: 0,
+                            backgroundColor: const Color(0xFF009FE3),
                           ),
-                          elevation: 0,
-                          backgroundColor: const Color(0xFF009FE3),
-                        ),
-                        child: Text(
-                          'Complete Profile',
-                          style: GoogleFonts.montserrat(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
+                          child: Text(
+                            'Complete Profile',
+                            style: GoogleFonts.montserrat(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
-                      ),
-                    if (resumeUploaded == true)
-                      Text(
-                        'Under Review',
-                        style: GoogleFonts.montserrat(fontWeight: FontWeight.w600, fontSize: 24, color: const Color(0xFFEF6E45)),
-                      ),
-                  ],
-                ),
+                      if (resumeUploaded == true)
+                        Text(
+                          'Under Review',
+                          style: GoogleFonts.montserrat(fontWeight: FontWeight.w600, fontSize: 24, color: const Color(0xFFEF6E45)),
+                        ),
+                    ],
+                  ),
               ],
             ),
           ),
