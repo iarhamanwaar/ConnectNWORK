@@ -10,9 +10,11 @@ import 'package:connectnwork/widgets/earning_card.dart';
 import 'package:connectnwork/widgets/scaffold_gradient.dart';
 import 'package:connectnwork/widgets/schedule.dart';
 import 'package:connectnwork/widgets/toggle_button.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -108,7 +110,28 @@ class BrowseJobs extends StatefulWidget {
 }
 
 class _BrowseJobsState extends State<BrowseJobs> {
+  final RefreshController _refreshController = RefreshController(initialRefresh: false);
   List<Job>? data;
+
+  void _onRefresh() async {
+    List<Job>? tempLoad = await JobsRepository.browse();
+
+    setState(() {
+      data = tempLoad;
+    });
+
+    _refreshController.refreshCompleted();
+  }
+
+  void _onLoading() async {
+    List<Job>? tempLoad = await JobsRepository.browse();
+
+    setState(() {
+      data = tempLoad;
+    });
+
+    _refreshController.loadComplete();
+  }
 
   onGoBack() async {
     showDialog(
@@ -138,40 +161,68 @@ class _BrowseJobsState extends State<BrowseJobs> {
         data = snapshot.data;
 
         if (data != null) {
-          return ListView.builder(
-            physics: const BouncingScrollPhysics(),
-            shrinkWrap: true,
-            itemCount: data!.length,
-            padding: const EdgeInsets.only(
-              left: 20.0,
-              right: 20.0,
-              bottom: 20.0,
+          return SmartRefresher(
+            enablePullDown: true,
+            enablePullUp: true,
+            header: const ClassicHeader(),
+            footer: CustomFooter(
+              builder: (BuildContext context, LoadStatus? mode) {
+                Widget body;
+                if (mode == LoadStatus.idle) {
+                  body = const Text("Pull up to refresh");
+                } else if (mode == LoadStatus.loading) {
+                  body = const CupertinoActivityIndicator();
+                } else if (mode == LoadStatus.failed) {
+                  body = const Text("Refresh failed, retry please");
+                } else if (mode == LoadStatus.canLoading) {
+                  body = const Text("Release to refresh");
+                } else {
+                  body = const Text("No new jobs");
+                }
+                return SizedBox(
+                  height: 55.0,
+                  child: Center(child: body),
+                );
+              },
             ),
-            itemBuilder: (context, index) {
-              final Job job = data![index];
+            controller: _refreshController,
+            onRefresh: _onRefresh,
+            onLoading: _onLoading,
+            child: ListView.builder(
+              physics: const BouncingScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: data!.length,
+              padding: const EdgeInsets.only(
+                left: 20.0,
+                right: 20.0,
+                bottom: 20.0,
+              ),
+              itemBuilder: (context, index) {
+                final Job job = data![index];
 
-              return Column(
-                children: [
-                  BrowseJobCard(
-                    onPress: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => JobDetailsScreen(
-                            job: job,
+                return Column(
+                  children: [
+                    BrowseJobCard(
+                      onPress: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => JobDetailsScreen(
+                              job: job,
+                            ),
                           ),
-                        ),
-                      ).then((value) => onGoBack());
-                    },
-                    job: job,
-                    dateWithTime: true,
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                ],
-              );
-            },
+                        ).then((value) => onGoBack());
+                      },
+                      job: job,
+                      dateWithTime: true,
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                  ],
+                );
+              },
+            ),
           );
         } else if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(

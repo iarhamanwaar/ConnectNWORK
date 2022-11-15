@@ -2,6 +2,7 @@ import 'package:connectnwork/constants.dart';
 import 'package:connectnwork/providers/apple_sign_in.dart';
 import 'package:connectnwork/providers/facebook_sign_in.dart';
 import 'package:connectnwork/providers/google_sign_in.dart';
+import 'package:connectnwork/repos/user_repository.dart';
 import 'package:connectnwork/utils.dart';
 import 'package:connectnwork/widgets/scaffold_gradient.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -406,7 +407,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                       recognizer: TapGestureRecognizer()
                                         ..onTap = () {
                                           _launchInWebViewOrVC(
-                                            Uri.parse('http://connectnwork.com/terms'),
+                                            Uri.parse('https://connectnwork.com/job-seeker-terms'),
                                           );
                                         },
                                       style: GoogleFonts.montserrat(
@@ -469,17 +470,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                           );
 
                                           try {
-                                            UserCredential result = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                                            await FirebaseAuth.instance.createUserWithEmailAndPassword(
                                               email: _emailController.text.trim(),
                                               password: _passwordController.text,
                                             );
-                                            User user = result.user!;
-                                            user.updateDisplayName('${_firstNameController.text} ${_lastNameController.text}');
+
+                                            await UserRepository.update(
+                                              firstName: _firstNameController.text,
+                                              lastName: _lastNameController.text,
+                                            );
                                           } on FirebaseAuthException catch (e) {
                                             Utils.showSnackbar(e.message);
                                           }
 
-                                          navigatorKey.currentState!.popUntil((route) => route.isFirst);
+                                          navigatorKey.currentState!.pop();
                                         }
                                       },
                                       style: ButtonStyle(

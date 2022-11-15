@@ -355,7 +355,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                           }
                                         }
 
-                                        navigatorKey.currentState!.popUntil((route) => route.isFirst);
+                                        navigatorKey.currentState!.pop();
                                       }
                                     },
                                     style: ButtonStyle(

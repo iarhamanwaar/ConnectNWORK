@@ -445,8 +445,36 @@ class _Step2State extends State<Step2> {
                     context: context,
                     barrierDismissible: false,
                     builder: (context) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
+                      return Dialog(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.fromLTRB(19, 18, 19, 35),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const SizedBox(
+                                height: 55,
+                              ),
+                              Text(
+                                'Uploading images, do not close the app, this might take 5-10 seconds or more.',
+                                style: GoogleFonts.montserrat(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w700,
+                                  color: const Color(0xFF009FE3),
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 55,
+                              ),
+                              const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                            ],
+                          ),
+                        ),
                       );
                     },
                   );

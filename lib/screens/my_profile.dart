@@ -11,6 +11,7 @@ import 'package:connectnwork/repos/user_repository.dart';
 import 'package:connectnwork/widgets/app_bar.dart';
 import 'package:connectnwork/widgets/drawer.dart';
 import 'package:connectnwork/widgets/scaffold_gradient.dart';
+import 'package:connectnwork/widgets/unverified_drawer.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -37,6 +38,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
   File? workPermitFile;
   bool resumeUploaded = false;
   bool workPermitUploaded = false;
+  bool resumeSubmitted = false;
 
   @override
   Widget build(BuildContext context) {
@@ -48,8 +50,9 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
       currentStep = 2;
     }
 
-    if (myProfile!.idVerified != null) {
-      verified = myProfile!.idVerified!;
+    if (myProfile!.status != null && myProfile!.status == 'active') {
+      currentStep = 1;
+      verified = true;
     }
 
     if (myProfile!.phoneNumber != null) {
@@ -58,6 +61,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
 
     if (myProfile!.resume != null) {
       resumeUploaded = true;
+      resumeSubmitted = true;
     }
 
     if (myProfile!.workPermit != null) {
@@ -67,7 +71,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
     return ScaffoldGradient(
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        drawer: const CustomDrawer(),
+        drawer: verified ? const CustomDrawer() : const UnverifiedDrawer(),
         appBar: const CustomAppBar(
           title: 'My Profile',
           drawer: true,
@@ -298,14 +302,40 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                       const SizedBox(
                         width: 20,
                       ),
-                      if (myProfile!.fullName != null)
-                        Text(
-                          myProfile!.fullName!,
-                          style: GoogleFonts.montserrat(
-                            fontWeight: FontWeight.w600,
-                            color: Colors.black,
-                            fontSize: 14,
-                            height: 1.5,
+                      if (myProfile!.firstName != null && myProfile!.lastName != null)
+                        Expanded(
+                          child: Text(
+                            '${myProfile!.firstName} ${myProfile!.lastName}',
+                            style: GoogleFonts.montserrat(
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black,
+                              fontSize: 14,
+                              height: 1.5,
+                            ),
+                          ),
+                        ),
+                      if (myProfile!.firstName != null && myProfile!.lastName == null)
+                        Expanded(
+                          child: Text(
+                            '${myProfile!.firstName}',
+                            style: GoogleFonts.montserrat(
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black,
+                              fontSize: 14,
+                              height: 1.5,
+                            ),
+                          ),
+                        ),
+                      if (myProfile!.lastName != null && myProfile!.firstName == null)
+                        Expanded(
+                          child: Text(
+                            '${myProfile!.lastName}',
+                            style: GoogleFonts.montserrat(
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black,
+                              fontSize: 14,
+                              height: 1.5,
+                            ),
                           ),
                         ),
                       const SizedBox(
@@ -439,7 +469,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                 const SizedBox(
                   height: 24,
                 ),
-                if (myProfile!.idVerified == null || myProfile!.idVerified! == false)
+                if (verified == false)
                   RichText(
                     text: TextSpan(
                       style: GoogleFonts.montserrat(
@@ -472,6 +502,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                     right: 12.0,
                     bottom: 40.0,
                   ),
+                  width: double.infinity,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     border: Border.all(
@@ -489,7 +520,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      if (myProfile!.idVerified != null && myProfile!.idVerified! == false)
+                      if (verified == false)
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -530,7 +561,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                 color: currentStep == 2 ? const Color(0xFF009FE3) : Colors.white,
                                 border: currentStep == 2
                                     ? Border.all(
-                                        color: const Color(0xFF000000),
+                                        color: const Color(0xFF009FE3),
                                       )
                                     : Border.all(
                                         color: const Color(0xFFE3F1FC),
@@ -552,11 +583,11 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                             ),
                           ],
                         ),
-                      if (myProfile!.idVerified != null && myProfile!.idVerified! == false)
+                      if (verified == false)
                         const SizedBox(
                           height: 22,
                         ),
-                      if (myProfile!.idVerified != null && myProfile!.idVerified! == false)
+                      if (verified == false)
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -626,7 +657,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                       const SizedBox(
                         height: 25,
                       ),
-                      if (currentStep == 1 && (myProfile!.idVerified == null || myProfile!.idVerified! == false))
+                      if (currentStep == 1 && verified == false && (myProfile!.certnVerify != null && myProfile!.certnVerify! == false))
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -700,7 +731,22 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                             ),
                           ],
                         ),
-                      if (currentStep == 2 && (myProfile!.idVerified == null || myProfile!.idVerified! == false))
+                      if (currentStep == 1 && verified == false && (myProfile!.certnVerify != null && myProfile!.certnVerify! == true))
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Your ID verification is being processed and will take few minutes to be completed.',
+                              style: GoogleFonts.montserrat(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black,
+                                height: 2,
+                              ),
+                            ),
+                          ],
+                        ),
+                      if (currentStep == 2 && verified == false)
                         Column(
                           children: [
                             RichText(
@@ -732,17 +778,19 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 ElevatedButton(
-                                  onPressed: () async {
-                                    resume = await FilePicker.platform.pickFiles();
+                                  onPressed: resumeSubmitted == true
+                                      ? null
+                                      : () async {
+                                          resume = await FilePicker.platform.pickFiles();
 
-                                    if (resume != null) {
-                                      resumeFile = File(resume!.files.single.path!);
+                                          if (resume != null) {
+                                            resumeFile = File(resume!.files.single.path!);
 
-                                      setState(() {
-                                        resumeUploaded = true;
-                                      });
-                                    }
-                                  },
+                                            setState(() {
+                                              resumeUploaded = true;
+                                            });
+                                          }
+                                        },
                                   style: ElevatedButton.styleFrom(
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(8.0),
@@ -806,17 +854,19 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 ElevatedButton(
-                                  onPressed: () async {
-                                    workPermit = await FilePicker.platform.pickFiles();
+                                  onPressed: resumeSubmitted == true
+                                      ? null
+                                      : () async {
+                                          workPermit = await FilePicker.platform.pickFiles();
 
-                                    if (workPermit != null) {
-                                      workPermitFile = File(workPermit!.files.single.path!);
+                                          if (workPermit != null) {
+                                            workPermitFile = File(workPermit!.files.single.path!);
 
-                                      setState(() {
-                                        workPermitUploaded = true;
-                                      });
-                                    }
-                                  },
+                                            setState(() {
+                                              workPermitUploaded = true;
+                                            });
+                                          }
+                                        },
                                   style: ElevatedButton.styleFrom(
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(8.0),
@@ -854,7 +904,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                             ),
                           ],
                         ),
-                      if (myProfile!.idVerified != null && myProfile!.idVerified! == true)
+                      if (verified == true)
                         Column(
                           children: [
                             const SizedBox(
@@ -901,11 +951,11 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                 const SizedBox(
                   height: 20,
                 ),
-                if (myProfile!.idVerified != null && myProfile!.idVerified! == false)
+                if (verified == false && currentStep == 2)
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      if (resumeUploaded == false)
+                      if (resumeSubmitted == false)
                         ElevatedButton(
                           onPressed: () async {
                             showDialog(
@@ -971,7 +1021,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                             ),
                           ),
                         ),
-                      if (resumeUploaded == true)
+                      if (resumeSubmitted == true)
                         Text(
                           'Under Review',
                           style: GoogleFonts.montserrat(fontWeight: FontWeight.w600, fontSize: 24, color: const Color(0xFFEF6E45)),

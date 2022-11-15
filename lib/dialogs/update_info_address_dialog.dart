@@ -1,26 +1,28 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:connectnwork/constants.dart';
-import 'package:connectnwork/dialogs/id_verification_dialog.dart';
+import 'package:connectnwork/dialogs/update_info_complete_dialog.dart';
 import 'package:connectnwork/models/iaddress_schema.dart';
 import 'package:connectnwork/repos/location_repository.dart';
 import 'package:connectnwork/repos/user_repository.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 
-Future<void> showAddressVerificationDialog() async {
+Future<void> showUpdateInfoAddressDialog() async {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  final TextEditingController dobController = TextEditingController();
   final TextEditingController addressController = TextEditingController();
   final TextEditingController aptController = TextEditingController();
-  DateTime? picked;
   List<IAddressSchema> address = [];
   IAddressSchema? selectedAddress;
   bool search = false;
-
-  if (myProfile!.dob != null) {
-    dobController.text = DateFormat.yMd().format(myProfile!.dob!);
-  }
+  FilePickerResult? resume;
+  File? resumeFile;
+  bool resumeUploaded = false;
 
   if (myProfile!.address != null && myProfile!.address!.formattedAddress != null) {
     addressController.text = myProfile!.address!.formattedAddress!;
@@ -54,64 +56,6 @@ Future<void> showAddressVerificationDialog() async {
                       },
                       child: SvgPicture.asset(
                         'assets/back_button.svg',
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    Text(
-                      'Date of birth',
-                      style: GoogleFonts.montserrat(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.black,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    GestureDetector(
-                      onTap: () async {
-                        picked = null;
-                        picked = await showDatePicker(
-                          context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime(1950),
-                          lastDate: DateTime.now(),
-                        );
-                        if (picked != null) {
-                          setState(() {
-                            dobController.text = '${picked?.day}/${picked?.month}/${picked?.year}';
-                          });
-                        }
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.fromLTRB(17.0, 14.0, 14.0, 16.0),
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: const Color(0xFFDADADA),
-                          ),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              dobController.text == '' ? 'DD/MM/YYYY' : dobController.text,
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: dobController.text == '' ? const Color(0xFFDADADA) : Colors.black,
-                              ),
-                            ),
-                            Icon(
-                              Icons.calendar_month_outlined,
-                              color: dobController.text == '' ? const Color(0xFFDADADA) : Colors.black,
-                              size: 18,
-                            ),
-                          ],
-                        ),
                       ),
                     ),
                     const SizedBox(
@@ -272,14 +216,83 @@ Future<void> showAddressVerificationDialog() async {
                       ],
                     ),
                     const SizedBox(
-                      height: 82,
+                      height: 30,
+                    ),
+                    Column(
+                      children: [
+                        Text(
+                          'Update your latest resume',
+                          style: GoogleFonts.montserrat(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black,
+                            height: 2,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ElevatedButton(
+                              onPressed: () async {
+                                resume = await FilePicker.platform.pickFiles();
+
+                                if (resume != null) {
+                                  resumeFile = File(resume!.files.single.path!);
+
+                                  setState(() {
+                                    resumeUploaded = true;
+                                  });
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                elevation: 0,
+                                backgroundColor: resumeUploaded == false ? const Color(0xFF77838F) : const Color(0xFF31C889).withOpacity(0.1),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 3.0,
+                                ),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      FontAwesomeIcons.image,
+                                      color: resumeUploaded == false ? Colors.white : const Color(0xFF31C889),
+                                      size: 15,
+                                    ),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      resumeUploaded == false ? 'Upload File' : 'File uploaded',
+                                      style: GoogleFonts.montserrat(
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w400,
+                                        color: resumeUploaded == false ? Colors.white : const Color(0xFF31C889),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 50,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         ElevatedButton(
                           onPressed: () async {
-                            if (formKey.currentState!.validate() && dobController.text != '' && selectedAddress != null) {
+                            if (formKey.currentState!.validate() && selectedAddress != null) {
                               showDialog(
                                 context: context,
                                 barrierDismissible: false,
@@ -293,15 +306,21 @@ Future<void> showAddressVerificationDialog() async {
                               selectedAddress!.apt = aptController.text;
 
                               await UserRepository.update(
-                                dob: picked,
                                 address: selectedAddress,
                               );
+
+                              if (resumeFile != null) {
+                                Uint8List resumeBytes = await resumeFile!.readAsBytes();
+                                String resumeBase64string = base64.encode(resumeBytes);
+
+                                UserRepository.update(resume: resumeBase64string);
+                              }
 
                               myProfile = await UserRepository.get();
 
                               navigatorKey.currentState!.pop();
                               navigatorKey.currentState!.pop();
-                              showIDVerificationDialog();
+                              showUpdateInfoCompleteDialog();
                             }
                           },
                           style: ButtonStyle(
@@ -319,7 +338,7 @@ Future<void> showAddressVerificationDialog() async {
                             ),
                             child: Center(
                               child: Text(
-                                'Next',
+                                'Send',
                                 style: GoogleFonts.montserrat(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w600,

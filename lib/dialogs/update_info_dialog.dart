@@ -1,31 +1,27 @@
 import 'package:connectnwork/constants.dart';
-import 'package:connectnwork/dialogs/id_verification_dialog.dart';
-import 'package:connectnwork/models/iaddress_schema.dart';
-import 'package:connectnwork/repos/location_repository.dart';
+import 'package:connectnwork/dialogs/update_info_address_dialog.dart';
 import 'package:connectnwork/repos/user_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 
 Future<void> showUpdateInfoDialog() async {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  final TextEditingController dobController = TextEditingController();
-  final TextEditingController addressController = TextEditingController();
-  final TextEditingController aptController = TextEditingController();
-  DateTime? picked;
-  List<IAddressSchema> address = [];
-  IAddressSchema? selectedAddress;
-  bool search = false;
+  final TextEditingController firstNameController = TextEditingController();
+  final TextEditingController lastNameController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
 
-  if (myProfile!.dob != null) {
-    dobController.text = DateFormat.yMd().format(myProfile!.dob!);
+  if (myProfile!.firstName != null) {
+    firstNameController.text = myProfile!.firstName!;
   }
 
-  if (myProfile!.address != null && myProfile!.address!.formattedAddress != null) {
-    addressController.text = myProfile!.address!.formattedAddress!;
-    if (myProfile!.address!.apt != null) aptController.text = myProfile!.address!.apt!;
-    selectedAddress = myProfile!.address!.toIAddressSchema();
+  if (myProfile!.lastName != null) {
+    lastNameController.text = myProfile!.lastName!;
+  }
+
+  if (myProfile!.phoneNumber != null) {
+    phoneController.text = myProfile!.phoneNumber!;
   }
 
   return showDialog(
@@ -60,65 +56,7 @@ Future<void> showUpdateInfoDialog() async {
                       height: 15,
                     ),
                     Text(
-                      'Date of birth',
-                      style: GoogleFonts.montserrat(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.black,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    GestureDetector(
-                      onTap: () async {
-                        picked = null;
-                        picked = await showDatePicker(
-                          context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime(1950),
-                          lastDate: DateTime.now(),
-                        );
-                        if (picked != null) {
-                          setState(() {
-                            dobController.text = '${picked?.day}/${picked?.month}/${picked?.year}';
-                          });
-                        }
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.fromLTRB(17.0, 14.0, 14.0, 16.0),
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: const Color(0xFFDADADA),
-                          ),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              dobController.text == '' ? 'DD/MM/YYYY' : dobController.text,
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: dobController.text == '' ? const Color(0xFFDADADA) : Colors.black,
-                              ),
-                            ),
-                            Icon(
-                              Icons.calendar_month_outlined,
-                              color: dobController.text == '' ? const Color(0xFFDADADA) : Colors.black,
-                              size: 18,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    Text(
-                      'Address',
+                      'First Name',
                       style: GoogleFonts.montserrat(
                         fontSize: 14,
                         fontWeight: FontWeight.w700,
@@ -132,23 +70,13 @@ Future<void> showUpdateInfoDialog() async {
                       children: [
                         Expanded(
                           child: TextFormField(
-                            onChanged: (value) async {
-                              search = true;
-                              selectedAddress = null;
-                              if (value != '' && search) {
-                                address = await LocationRepository.getAddress(value);
-                                setState(() {
-                                  address;
-                                });
-                              }
-                            },
-                            controller: addressController,
+                            readOnly: true,
+                            controller: firstNameController,
                             autocorrect: false,
                             keyboardType: TextInputType.text,
-                            autovalidateMode: AutovalidateMode.onUserInteraction,
                             validator: (value) {
                               if (value == '') {
-                                return 'Please enter an address';
+                                return 'Please enter your first name';
                               } else {
                                 return null;
                               }
@@ -162,7 +90,6 @@ Future<void> showUpdateInfoDialog() async {
                                 ),
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              hintText: 'Search address',
                               hintStyle: const TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
@@ -173,84 +100,35 @@ Future<void> showUpdateInfoDialog() async {
                         ),
                       ],
                     ),
-                    SizedBox(
-                      height: 35.0 * address.length + 15,
-                      child: ListView.builder(
-                        itemCount: address.length,
-                        padding: const EdgeInsets.only(
-                          top: 10,
-                          bottom: 5,
-                        ),
-                        itemBuilder: (context, index) {
-                          return Container(
-                            height: 35,
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: const Color(0xFFDADADA),
-                              ),
-                              borderRadius: BorderRadius.vertical(
-                                top: index == 0 ? const Radius.circular(10) : Radius.zero,
-                                bottom: index == address.length - 1 ? const Radius.circular(10) : Radius.zero,
-                              ),
-                            ),
-                            child: ListView(
-                              scrollDirection: Axis.horizontal,
-                              children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      selectedAddress = address[index];
-                                      address = [];
-                                      addressController.text = selectedAddress!.formattedAddress;
-                                      search = false;
-                                    });
-                                  },
-                                  child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      const SizedBox(
-                                        width: 5,
-                                      ),
-                                      const Icon(
-                                        Icons.location_on_outlined,
-                                        color: Color(0xFFDADADA),
-                                      ),
-                                      const SizedBox(
-                                        width: 5,
-                                      ),
-                                      Text(
-                                        address[index].formattedAddress,
-                                        style: GoogleFonts.montserrat(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w400,
-                                          letterSpacing: 0.25,
-                                          height: 1.5,
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        width: 10,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    Text(
+                      'Last Name',
+                      style: GoogleFonts.montserrat(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.black,
                       ),
                     ),
                     const SizedBox(
-                      height: 10,
+                      height: 15,
                     ),
                     Row(
                       children: [
-                        SizedBox(
-                          width: 115,
+                        Expanded(
                           child: TextFormField(
-                            controller: aptController,
+                            controller: lastNameController,
+                            readOnly: true,
                             autocorrect: false,
                             keyboardType: TextInputType.text,
+                            validator: (value) {
+                              if (value == '') {
+                                return 'Please enter your last name';
+                              } else {
+                                return null;
+                              }
+                            },
                             decoration: InputDecoration(
                               isDense: true,
                               contentPadding: const EdgeInsets.fromLTRB(17.0, 14.0, 10.0, 16.0),
@@ -260,11 +138,48 @@ Future<void> showUpdateInfoDialog() async {
                                 ),
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              hintText: 'Apt #',
-                              hintStyle: const TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: Color(0xFFDADADA),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      'Phone number',
+                      style: GoogleFonts.montserrat(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.black,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                            controller: phoneController,
+                            autocorrect: false,
+                            keyboardType: TextInputType.number,
+                            inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
+                            validator: (value) {
+                              if (value == '') {
+                                return 'Please enter your phone number';
+                              } else {
+                                return null;
+                              }
+                            },
+                            decoration: InputDecoration(
+                              isDense: true,
+                              contentPadding: const EdgeInsets.fromLTRB(17.0, 14.0, 10.0, 16.0),
+                              border: OutlineInputBorder(
+                                borderSide: const BorderSide(
+                                  color: Color(0xFFDADADA),
+                                ),
+                                borderRadius: BorderRadius.circular(10),
                               ),
                             ),
                           ),
@@ -272,14 +187,14 @@ Future<void> showUpdateInfoDialog() async {
                       ],
                     ),
                     const SizedBox(
-                      height: 82,
+                      height: 20,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         ElevatedButton(
                           onPressed: () async {
-                            if (formKey.currentState!.validate() && dobController.text != '' && selectedAddress != null) {
+                            if (formKey.currentState!.validate() && phoneController.text != myProfile!.phoneNumber) {
                               showDialog(
                                 context: context,
                                 barrierDismissible: false,
@@ -290,15 +205,18 @@ Future<void> showUpdateInfoDialog() async {
                                 },
                               );
 
-                              selectedAddress!.apt = aptController.text;
-
                               await UserRepository.update(
-                                dob: picked,
-                                address: selectedAddress,
+                                phoneNumber: phoneController.text,
                               );
 
+                              myProfile = await UserRepository.get();
+
                               navigatorKey.currentState!.pop();
                               navigatorKey.currentState!.pop();
+                              showUpdateInfoAddressDialog();
+                            } else {
+                              navigatorKey.currentState!.pop();
+                              showUpdateInfoAddressDialog();
                             }
                           },
                           style: ButtonStyle(
@@ -316,7 +234,7 @@ Future<void> showUpdateInfoDialog() async {
                             ),
                             child: Center(
                               child: Text(
-                                'Done',
+                                'Next',
                                 style: GoogleFonts.montserrat(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w600,

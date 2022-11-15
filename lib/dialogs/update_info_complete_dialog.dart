@@ -2,7 +2,7 @@ import 'package:connectnwork/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-Future<void> showIdCompletionDialog() async {
+Future<void> showUpdateInfoCompleteDialog() async {
   return showDialog(
     context: navigatorKey.currentContext!,
     builder: (BuildContext context) {
@@ -14,25 +14,23 @@ Future<void> showIdCompletionDialog() async {
             ),
             child: Container(
               width: double.infinity,
-              padding: const EdgeInsets.fromLTRB(40, 18, 40, 35),
+              padding: const EdgeInsets.fromLTRB(19, 18, 19, 35),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   const SizedBox(
-                    height: 40,
+                    height: 55,
                   ),
                   Text(
-                    'Congratulations!\nYour profile is now completed. We will be back to you soon if all requirements are provided.',
+                    'User Information updated!',
                     style: GoogleFonts.montserrat(
                       fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black,
+                      fontWeight: FontWeight.w700,
+                      color: const Color(0xFF009FE3),
                     ),
-                    textAlign: TextAlign.center,
                   ),
                   const SizedBox(
-                    height: 40,
+                    height: 55,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -42,10 +40,11 @@ Future<void> showIdCompletionDialog() async {
                           navigatorKey.currentState!.pop();
                         },
                         style: OutlinedButton.styleFrom(
+                          elevation: 0,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4),
+                            borderRadius: BorderRadius.circular(10),
                             side: const BorderSide(
-                              color: kBluePrimary,
+                              color: Color(0xFF009FE3),
                             ),
                           ),
                         ),
@@ -58,9 +57,9 @@ Future<void> showIdCompletionDialog() async {
                             child: Text(
                               'Close',
                               style: GoogleFonts.montserrat(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                color: kBluePrimary,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                                color: const Color(0xFF009FE3),
                               ),
                             ),
                           ),

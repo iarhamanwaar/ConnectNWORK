@@ -2,6 +2,7 @@ import 'package:connectnwork/constants.dart';
 import 'package:connectnwork/widgets/app_bar.dart';
 import 'package:connectnwork/widgets/drawer.dart';
 import 'package:connectnwork/widgets/scaffold_gradient.dart';
+import 'package:connectnwork/widgets/unverified_drawer.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -15,14 +16,20 @@ class SupportScreen extends StatefulWidget {
 }
 
 class _SupportScreenState extends State<SupportScreen> {
+  bool verified = false;
+
   @override
   Widget build(BuildContext context) {
     myLocale = Localizations.localeOf(context);
 
+    if (myProfile!.status != null && myProfile!.status == 'active') {
+      verified = true;
+    }
+
     return ScaffoldGradient(
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        drawer: const CustomDrawer(),
+        drawer: verified ? const CustomDrawer() : const UnverifiedDrawer(),
         appBar: const CustomAppBar(
           title: 'Support',
           drawer: true,

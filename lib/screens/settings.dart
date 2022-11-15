@@ -132,7 +132,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     ElevatedButton(
                       onPressed: () {
                         _launchInWebViewOrVC(
-                          Uri.parse('http://connectnwork.com/privacy'),
+                          Uri.parse('https://connectnwork.com/job-seeker-terms'),
                         );
                       },
                       style: ButtonStyle(
@@ -174,7 +174,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     ElevatedButton(
                       onPressed: () {
                         _launchInWebViewOrVC(
-                          Uri.parse('https://connectnwork.com/job-seeker-terms'),
+                          Uri.parse('http://connectnwork.com/privacy'),
                         );
                       },
                       style: ButtonStyle(
@@ -229,16 +229,16 @@ class _SettingsPageState extends State<SettingsPage> {
                           },
                         );
 
+                        String? deviceIdToken = await FirebaseMessaging.instance.getToken();
+
+                        if (deviceIdToken != null) {
+                          await UserRepository.deleteNotifcation(id: deviceIdToken);
+                        }
+
                         try {
                           await FirebaseAuth.instance.signOut();
                         } on FirebaseException {
                           rethrow;
-                        }
-
-                        String? deviceIdToken = await FirebaseMessaging.instance.getToken();
-
-                        if (deviceIdToken != null) {
-                          UserRepository.deleteNotifcation(id: deviceIdToken);
                         }
 
                         navigatorKey.currentState!.popUntil((route) => route.isFirst);
