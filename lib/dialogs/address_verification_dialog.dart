@@ -251,14 +251,6 @@ Future<void> showAddressVerificationDialog() async {
                             controller: aptController,
                             autocorrect: false,
                             keyboardType: TextInputType.text,
-                            autovalidateMode: AutovalidateMode.onUserInteraction,
-                            validator: (value) {
-                              if (value == '') {
-                                return 'Please enter an apt #';
-                              } else {
-                                return null;
-                              }
-                            },
                             decoration: InputDecoration(
                               isDense: true,
                               contentPadding: const EdgeInsets.fromLTRB(17.0, 14.0, 10.0, 16.0),
