@@ -499,8 +499,6 @@ class _Step2State extends State<Step2> {
                     idCountryCode: myProfile!.address!.countryCode,
                   );
 
-                  myProfile = await UserRepository.get();
-
                   navigatorKey.currentState!.pop();
                   navigatorKey.currentState!.pop();
                 }

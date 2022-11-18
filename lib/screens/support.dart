@@ -22,7 +22,7 @@ class _SupportScreenState extends State<SupportScreen> {
   Widget build(BuildContext context) {
     myLocale = Localizations.localeOf(context);
 
-    if (myProfile!.idVerified != null && myProfile!.idVerified! == true) {
+    if (myProfile!.idVerified != null && myProfile!.idVerified == true) {
       verified = true;
     }
 

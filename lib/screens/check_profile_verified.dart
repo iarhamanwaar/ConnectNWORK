@@ -24,7 +24,7 @@ class _CheckProfileVerifiedState extends State<CheckProfileVerified> {
             final data = snapshot.data;
             if (data != null) {
               myProfile = data;
-              if (myProfile!.idVerified != null && myProfile!.idVerified! == true) {
+              if (myProfile!.idVerified != null && myProfile!.idVerified == true) {
                 return const HomeScreen();
               } else {
                 return const MyProfileScreen();

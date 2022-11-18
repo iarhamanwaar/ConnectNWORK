@@ -4,9 +4,11 @@ import 'dart:io';
 import 'package:connectnwork/constants.dart';
 import 'package:connectnwork/dialogs/address_verification_dialog.dart';
 import 'package:connectnwork/dialogs/id_completion_dialog.dart';
+import 'package:connectnwork/dialogs/id_uncomplete_dialog.dart';
 import 'package:connectnwork/dialogs/id_verification_dialog.dart';
 import 'package:connectnwork/dialogs/update_info_dialog.dart';
 import 'package:connectnwork/dialogs/username_dialog.dart';
+import 'package:connectnwork/models/my_profile_model.dart';
 import 'package:connectnwork/repos/user_repository.dart';
 import 'package:connectnwork/widgets/app_bar.dart';
 import 'package:connectnwork/widgets/drawer.dart';
@@ -50,7 +52,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
       currentStep = 2;
     }
 
-    if (myProfile!.idVerified != null && myProfile!.idVerified! == true) {
+    if (myProfile!.idVerified != null && myProfile!.idVerified == true) {
       currentStep = 1;
       verified = true;
     }
@@ -688,17 +690,20 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                 ElevatedButton(
                                   onPressed: () async {
                                     if (myProfile!.firstName == null || myProfile!.lastName == null || myProfile!.phoneNumber == null) {
-                                      showUsernameDialog().then((value) => setState(() {
+                                      await showUsernameDialog().then((value) => setState(() {
                                             myProfile;
                                           }));
                                     } else if (myProfile!.dob == null || myProfile!.address == null) {
-                                      showAddressVerificationDialog().then((value) => setState(() {
+                                      await showAddressVerificationDialog().then((value) => setState(() {
                                             myProfile;
                                           }));
                                     } else {
-                                      showIDVerificationDialog().then((value) => setState(() {
-                                            myProfile;
-                                          }));
+                                      await showIDVerificationDialog().then((value) async {
+                                        MyProfile tempMyProfile = await UserRepository.get();
+                                        setState(() {
+                                          myProfile = tempMyProfile;
+                                        });
+                                      });
                                     }
                                   },
                                   style: ButtonStyle(
@@ -968,42 +973,41 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                               },
                             );
 
-                            if (resumeFile != null && workPermitFile != null) {
-                              Uint8List resumeBytes = await resumeFile!.readAsBytes();
-                              String resumeBase64string = base64.encode(resumeBytes);
+                            if (resumeFile != null) {
+                              if (workPermitFile != null) {
+                                Uint8List resumeBytes = await resumeFile!.readAsBytes();
+                                String resumeBase64string = base64.encode(resumeBytes);
 
-                              Uint8List workPermitBytes = await workPermitFile!.readAsBytes();
-                              String workPermitBase64string = base64.encode(workPermitBytes);
+                                Uint8List workPermitBytes = await workPermitFile!.readAsBytes();
+                                String workPermitBase64string = base64.encode(workPermitBytes);
 
-                              await UserRepository.update(
-                                resume: resumeBase64string,
-                                workPermit: workPermitBase64string,
-                              );
-                            } else if (resumeFile != null && workPermitFile == null) {
-                              Uint8List resumeBytes = await resumeFile!.readAsBytes();
-                              String resumeBase64string = base64.encode(resumeBytes);
+                                await UserRepository.update(
+                                  resume: resumeBase64string,
+                                  workPermit: workPermitBase64string,
+                                );
+                              } else if (workPermitFile == null) {
+                                Uint8List resumeBytes = await resumeFile!.readAsBytes();
+                                String resumeBase64string = base64.encode(resumeBytes);
 
-                              await UserRepository.update(
-                                resume: resumeBase64string,
-                              );
-                            } else if (resumeFile == null && workPermitFile != null) {
-                              Uint8List workPermitBytes = await workPermitFile!.readAsBytes();
-                              String workPermitBase64string = base64.encode(workPermitBytes);
+                                await UserRepository.update(
+                                  resume: resumeBase64string,
+                                );
+                              }
 
-                              await UserRepository.update(
-                                workPermit: workPermitBase64string,
-                              );
+                              myProfile = await UserRepository.get();
+
+                              setState(() {
+                                myProfile;
+                              });
+
+                              navigatorKey.currentState!.pop();
+
+                              await showIdCompletionDialog();
+                            } else if (resumeFile == null) {
+                              navigatorKey.currentState!.pop();
+
+                              await showIdUncompleteDialog();
                             }
-
-                            myProfile = await UserRepository.get();
-
-                            setState(() {
-                              myProfile;
-                            });
-
-                            navigatorKey.currentState!.pop();
-
-                            await showIdCompletionDialog();
                           },
                           style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(
